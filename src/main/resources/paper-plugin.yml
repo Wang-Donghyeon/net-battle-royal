@@ -1,4 +1,4 @@
 name: netBattleRoyal
 version: '1.0-SNAPSHOT'
-main: io.github.anblusis.netBattleRoyal.NetBattleRoyal
+main: io.github.anblusis.netBattleRoyal.main.NetBattleRoyal
 api-version: '1.20'
