@@ -1,19 +1,14 @@
 package io.github.anblusis.netBattleRoyal.event
 
-import org.bukkit.Material
+import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.plugin
+import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.pluginManager
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.plugin.java.JavaPlugin
 
-class EventListener(
-    internal val plugin: JavaPlugin
-) : Listener {
-    private val pluginManager
-        get() = plugin.server.pluginManager
+object EventManager : Listener {
 
-    fun startListener() {
+    fun register() {
         pluginManager.registerEvents(this, plugin)
     }
 

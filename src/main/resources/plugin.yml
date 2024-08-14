@@ -1,7 +1,7 @@
-name: netBattleRoyal
+name: NetBattleRoyal
 version: '1.0-SNAPSHOT'
 author: anblusis
 main: io.github.anblusis.netBattleRoyal.main.NetBattleRoyal
 api-version: '1.20'
 libraries:
-  - io.github.monun:kommand-api:3.1.7
+  - io.github.monun:kommand-core:3.1.7

@@ -1,14 +1,14 @@
 package io.github.anblusis.netBattleRoyal.command
 
+import io.github.anblusis.netBattleRoyal.data.ChestsData.ChestsDataContents
+import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.plugin
 import io.github.monun.kommand.kommand
+import net.kyori.adventure.text.Component.text
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.plugin.java.JavaPlugin
 
-class PluginCommand(
-    private val plugin: JavaPlugin
-) {
-    fun startCommands()  {
+object CommandManager {
+    fun register()  {
         plugin.kommand {
             register("printChestsData") {
                 requires { hasPermission(4) }
@@ -20,15 +20,14 @@ class PluginCommand(
     }
 
     private fun printChestsData() {
-        val chestsData = mutableListOf<Map<String, Any>>() // 임시
-        if (chestsData.isEmpty()) {
-            print("저장된 블록 데이터가 없습니다.")
+        if (ChestsDataContents.isEmpty()) {
+            plugin.server.broadcast(text("저장된 블록 데이터가 없습니다."))
             return
         }
 
-        val codeSnippet = StringBuilder("val chestsData = mutableListOf<Map<String, Any>>(\n")
+        val codeSnippet = StringBuilder("val contents = mutableListOf<Map<String, Any>>(\n")
 
-        chestsData.forEach { chestData ->
+        ChestsDataContents.forEach { chestData ->
             val location = chestData["location"] as Location
             val type = chestData["type"] as Material
 
@@ -44,7 +43,7 @@ class PluginCommand(
 
         codeSnippet.append(")")
 
-        print(codeSnippet.toString())
+        plugin.server.broadcast(text(codeSnippet.toString()))
     }
 }
 
