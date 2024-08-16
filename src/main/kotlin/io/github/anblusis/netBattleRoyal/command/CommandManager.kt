@@ -1,11 +1,13 @@
 package io.github.anblusis.netBattleRoyal.command
 
 import io.github.anblusis.netBattleRoyal.data.ChestsData.ChestsDataContents
+import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.plugin
 import io.github.monun.kommand.kommand
 import net.kyori.adventure.text.Component.text
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Player
 
 object CommandManager {
     fun register()  {
@@ -14,6 +16,18 @@ object CommandManager {
                 requires { hasPermission(4) }
                 executes {
                     printChestsData()
+                }
+            }
+            register("createBattleRoyal") {
+                requires { hasPermission(4) }
+                then("map" to string()) {
+                    then("mode" to int()) {
+                        then("players" to player()) {
+                            executes {
+                                createBattleRoyal(it["map"], it["mode"], it[players])
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -44,6 +58,10 @@ object CommandManager {
         codeSnippet.append(")")
 
         plugin.server.broadcast(text(codeSnippet.toString()))
+    }
+
+    private fun createBattleRoyal(map: String, mode: Int, players: MutableList<Player>) {
+        plugin.games.add(Game(map, mode, players))
     }
 }
 
