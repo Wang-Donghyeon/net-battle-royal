@@ -6,6 +6,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 import javax.xml.crypto.Data
 
 fun playerJoin(listener: EventManager, event: PlayerJoinEvent) : EventResult {
-    DataManager.addPlayer(event.player)
+    DataManager.addMarmotte(event.player)
     return EventResult.PLAYER_JOIN
 }
