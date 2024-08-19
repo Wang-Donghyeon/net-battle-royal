@@ -39,12 +39,6 @@ object CommandManager {
                 }
             }
             register("battleRoyalMap", "map") {
-                then("") {
-                    requires { isPlayer }
-                    executes {
-                        makeBattleRoyalMap(sender as Player)
-                    }
-                }
                 then("player" to player()) {
                     requires { hasPermission(4) }
                     executes {

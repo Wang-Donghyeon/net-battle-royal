@@ -56,9 +56,9 @@ class Game(
         worldBorder = world.worldBorder
 
         when (worldName) {
-            "school" -> {
-                center = Vector(0.0, 0.0, 0.0).toLocation(world)
-                worldBorder.size = 1600.0
+            "world" -> {
+                center = Vector(-248.0, 0.0, 840.0).toLocation(world)
+                worldBorder.size = 380.0
                 chestCount = 100
                 chestLocations = mutableListOf()
                 regions = mutableListOf()

@@ -9,14 +9,12 @@ import kotlin.math.abs
 data class Marmotte(val player: Player) {
     var game: Game? = null
 
-    val region
-        get() = getRegion()
-
-    fun getRegion(): Region? {
-        if (game == null) return null
-        val regions = game!!.regions.filter { isInRegion(it) }
-        return regions.maxByOrNull { it.priority }
-    }
+    val region: Region?
+        get() {
+            if (game == null) return null
+            val regions = game!!.regions.filter { isInRegion(it) }
+            return regions.maxByOrNull { it.priority }
+        }
 
     fun joinGame(game: Game) {
         this.game = game
