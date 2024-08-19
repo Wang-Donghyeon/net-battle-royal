@@ -42,7 +42,7 @@ class NetBattleRoyal : JavaPlugin() {
 
     private fun registerRecipe() {
         Recipe.values().forEach {
-            it.addRecipe()
+            it.addToServer()
         }
     }
 

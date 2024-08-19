@@ -1,16 +1,13 @@
 package io.github.anblusis.netBattleRoyal.event
 
-import io.github.anblusis.netBattleRoyal.data.BattleRoyalItemData
-import io.github.anblusis.netBattleRoyal.data.ChestData
-import io.github.anblusis.netBattleRoyal.data.ChestType
-import io.github.anblusis.netBattleRoyal.data.EventResult
+import io.github.anblusis.netBattleRoyal.data.*
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 
 fun playerInteract(listener: EventManager, event: PlayerInteractEvent) : EventResult {
     if (event.item == null) return EventResult.FAIL
-    if (!event.item!!.isSimilar(BattleRoyalItemData.MAGIC_STICK.itemStack)) return EventResult.FAIL
+    if (!event.item!!.isSimilar(BattleRoyalItemData.MAGIC_STICK.item)) return EventResult.FAIL
 
     when (event.action) {
         Action.RIGHT_CLICK_BLOCK -> {

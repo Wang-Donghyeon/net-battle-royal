@@ -1,7 +1,9 @@
 package io.github.anblusis.netBattleRoyal.command
 
 import io.github.anblusis.netBattleRoyal.data.BattleRoyalItemData
+import io.github.anblusis.netBattleRoyal.data.BattleRoyalMap
 import io.github.anblusis.netBattleRoyal.data.ChestType
+import io.github.anblusis.netBattleRoyal.data.DataManager
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import io.github.monun.kommand.KommandArgument.Companion.dynamic
@@ -36,6 +38,20 @@ object CommandManager {
                     }
                 }
             }
+            register("battleRoyalMap", "map") {
+                then("") {
+                    requires { isPlayer }
+                    executes {
+                        makeBattleRoyalMap(sender as Player)
+                    }
+                }
+                then("player" to player()) {
+                    requires { hasPermission(4) }
+                    executes {
+                        makeBattleRoyalMap(it["player"])
+                    }
+                }
+            }
             register("printChestsData") {
                 requires { hasPermission(4) }
                 executes {
@@ -65,9 +81,15 @@ object CommandManager {
 
     private fun giveBattleRoyalItem(players: List<Player>, item: BattleRoyalItemData, count: Int) {
         players.forEach { player ->
-            player.inventory.addItem(item.itemStack.apply {
+            player.inventory.addItem(item.item.apply {
                 amount = count
             })
+        }
+    }
+
+    private fun makeBattleRoyalMap(player: Player) {
+        DataManager.getMarmotte(player).game?.let {
+            player.inventory.addItem(BattleRoyalMap(it).item)
         }
     }
 

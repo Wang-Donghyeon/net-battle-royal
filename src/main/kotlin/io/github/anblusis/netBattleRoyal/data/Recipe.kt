@@ -5,13 +5,12 @@ import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
-import org.bukkit.plugin.java.JavaPlugin
 
-enum class Recipe(recipeName: String, val result: ItemStack, val shape: List<String>, val ingredients: Map<Char, Material>) {
+enum class Recipe(recipeName: String, private val result: ItemStack, private val shape: List<String>, private val ingredients: Map<Char, Material>) {
     MAGIC_SWORD("magic_sword",
-        BattleRoyalItemData.MAGIC_SWORD.itemStack,
-        listOf(" A ", " B ", " C "),
-        mapOf('A' to Material.DIAMOND, 'B' to Material.STICK, 'C' to Material.DIAMOND)
+        BattleRoyalItemData.MAGIC_SWORD.item,
+        listOf(" A ", " B ", " A "),
+        mapOf('A' to Material.DIAMOND, 'B' to Material.STICK)
     );
 
     private val key = NamespacedKey(plugin, recipeName)
@@ -25,12 +24,12 @@ enum class Recipe(recipeName: String, val result: ItemStack, val shape: List<Str
         return recipe
     }
 
-    fun addRecipe() {
+    fun addToServer() {
         val recipe = toBukkitRecipe()
         plugin.server.addRecipe(recipe)
     }
 
-    fun removeRecipe() {
+    fun removeFromServer() {
         plugin.server.removeRecipe(key)
     }
 }
