@@ -12,17 +12,17 @@ data class Marmotte(val player: Player) {
     val region: Region?
         get() {
             if (game == null) return null
-            val regions = game!!.regions.filter { isInRegion(it) }
+            val regions = game!!.regions.filter { game!!.isInRegion(it, player.location) }
             return regions.maxByOrNull { it.priority }
         }
 
     fun joinGame(game: Game) {
+        player.sendMessage("게임에 참가했습니다.")
         this.game = game
     }
 
-    private fun isInRegion(region: Region): Boolean {
-        val dx = abs(player.location.x - region.center.x)
-        val dz = abs(player.location.z - region.center.z)
-        return dx <= region.width / 2 && dz <= region.height / 2
+    fun leaveGame() {
+        player.sendMessage("게임을 나갔습니다.")
+        this.game = null
     }
 }

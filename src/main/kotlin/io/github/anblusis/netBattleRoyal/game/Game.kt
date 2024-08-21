@@ -1,12 +1,16 @@
 package io.github.anblusis.netBattleRoyal.game
 import io.github.anblusis.netBattleRoyal.data.*
+import io.github.anblusis.netBattleRoyal.data.DataManager.getMarmotte
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
+import io.github.monun.tap.task.Ticker
+import io.github.monun.tap.task.TickerTask
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.WorldBorder
 import org.bukkit.entity.Player
 import org.bukkit.map.MapRenderer
 import org.bukkit.util.Vector
+import kotlin.math.abs
 
 class Game(
     worldName: String,
@@ -19,6 +23,11 @@ class Game(
     lateinit var center: Location
     lateinit var worldBorder: WorldBorder
     private lateinit var chestLocations: List<ChestData>
+    private lateinit var chestTables: HashMap<ChestType, ChestLootTable>
+    private val task: TickerTask
+
+    private var chestCount: Int = 0
+    val maps: MutableList<BattleRoyalMap> = mutableListOf()
 
     val worldBorderCenter
         get() = worldBorder.center
@@ -26,13 +35,17 @@ class Game(
     val worldBorderSize
         get() = worldBorder.size
 
-    private var chestCount: Int = 0
-
     init {
-        registerWorld(worldName)
+        registerGame(worldName)
         registerPlayers(players)
 
         setChests()
+
+        task = plugin.ticker.runTaskTimer(this::onTick, 0L, 1L)
+    }
+
+    private fun onTick() {
+        chests.forEach { it.update() }
     }
 
     private fun setChests() {
@@ -44,14 +57,14 @@ class Game(
         run {
             repeat(chestCount) {
                 if (leftChestLocations.isEmpty()) return@run
-                val chest = RoyalChest(this, leftChestLocations.first())
+                val chest = RoyalChest(this, leftChestLocations.first(), chestTables[chestLocations.first().type]!!)
                 chests.add(chest)
                 leftChestLocations.removeFirst()
             }
         }
     }
 
-    private fun registerWorld(worldName: String) {
+    private fun registerGame(worldName: String) {
         world = plugin.server.getWorld(worldName)!!
         worldBorder = world.worldBorder
 
@@ -66,11 +79,28 @@ class Game(
         }
 
         worldBorder.center = center
+
+        chestTables[ChestType.NORMAL] = ChestLootTable(listOf(), listOf())
+        chestTables[ChestType.RARE] = ChestLootTable(listOf(), listOf())
+        chestTables[ChestType.EPIC] = ChestLootTable(listOf(), listOf())
     }
 
     private fun registerPlayers(players: MutableList<Player>) {
         players.forEach { player ->
-            DataManager.getMarmotte(player).joinGame(this)
+            getMarmotte(player).joinGame(this)
         }
+    }
+
+    fun isInRegion(region: Region, spot: Location): Boolean {
+        if (spot.world != region.center.world) return false
+        val dx = abs(spot.x - region.center.x)
+        val dz = abs(spot.z - region.center.z)
+        return dx <= region.width / 2 && dz <= region.height / 2
+    }
+
+    fun remove() {
+        task.cancel()
+        chests.forEach { it.remove() }
+        players.forEach { getMarmotte(it).leaveGame() }
     }
 }

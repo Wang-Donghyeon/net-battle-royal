@@ -39,6 +39,10 @@ object CommandManager {
                 }
             }
             register("battleRoyalMap", "map") {
+                executes {
+                    require(sender is Player)
+                    makeBattleRoyalMap(sender as Player)
+                }
                 then("player" to player()) {
                     requires { hasPermission(4) }
                     executes {
@@ -58,14 +62,23 @@ object CommandManager {
                     spawnParticleAtChestsData()
                 }
             }
-            register("createBattleRoyal") {
+            register("battleRoyal", "br") {
                 requires { hasPermission(4) }
-                then("map" to string()) {
-                    then("mode" to int()) {
-                        then("players" to players()) {
-                            executes {
-                                createBattleRoyal(it["map"], it["mode"], it["players"])
+                then("createBattleRoyal") {
+                    then("map" to string()) {
+                        then("mode" to int()) {
+                            then("players" to players()) {
+                                executes {
+                                    createBattleRoyal(it["map"], it["mode"], it["players"])
+                                }
                             }
+                        }
+                    }
+                }
+                then("removeBattleRoyal") {
+                    then("player" to player()) {
+                        executes {
+                            removeBattleRoyal(it["player"])
                         }
                     }
                 }
@@ -111,6 +124,10 @@ object CommandManager {
 
     private fun createBattleRoyal(map: String, mode: Int, players: List<Player>) {
         plugin.games.add(Game(map, mode, players.toMutableList()))
+    }
+
+    private fun removeBattleRoyal(player: Player) {
+        DataManager.getMarmotte(player).game?.remove()
     }
 
     private fun spawnParticleAtChestsData() {
