@@ -6,7 +6,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 
-enum class Recipe(recipeName: String, private val result: ItemStack, private val shape: List<String>, private val ingredients: Map<Char, Material>) {
+enum class Recipe(recipeName: String, val result: ItemStack, private val shape: List<String>, private val ingredients: Map<Char, Material>) {
     MAGIC_SWORD("magic_sword",
         BattleRoyalItemData.MAGIC_SWORD.item,
         listOf(" A ", " B ", " A "),
@@ -23,6 +23,8 @@ enum class Recipe(recipeName: String, private val result: ItemStack, private val
         }
         return recipe
     }
+
+    fun toMaterialShape(): List<Material?> = shape.flatMap { it.toCharArray().toList() }.map { ingredients[it] }
 
     fun addToServer() {
         val recipe = toBukkitRecipe()

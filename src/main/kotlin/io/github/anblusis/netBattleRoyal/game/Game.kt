@@ -25,6 +25,7 @@ class Game(
     private lateinit var chestLocations: List<ChestData>
     private lateinit var chestTables: HashMap<ChestType, ChestLootTable>
     private val task: TickerTask
+    private val
 
     private var chestCount: Int = 0
     val maps: MutableList<BattleRoyalMap> = mutableListOf()
