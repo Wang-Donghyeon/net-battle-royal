@@ -6,6 +6,7 @@ import io.github.anblusis.netBattleRoyal.data.ChestType
 import io.github.anblusis.netBattleRoyal.data.DataManager
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
+import io.github.monun.invfx.openFrame
 import io.github.monun.kommand.KommandArgument.Companion.dynamic
 import io.github.monun.kommand.kommand
 import net.kyori.adventure.text.Component.text
@@ -38,7 +39,7 @@ object CommandManager {
                     }
                 }
             }
-            register("battleRoyalMap", "map") {
+            register("battleRoyalMap", "brmap") {
                 executes {
                     require(sender is Player)
                     makeBattleRoyalMap(sender as Player)
@@ -47,6 +48,18 @@ object CommandManager {
                     requires { hasPermission(4) }
                     executes {
                         makeBattleRoyalMap(it["player"])
+                    }
+                }
+            }
+            register("battleRoyalUI", "brui") {
+                executes {
+                    require(sender is Player)
+                    showBattleRoyalUI(sender as Player)
+                }
+                then("player" to player()) {
+                    requires { hasPermission(4) }
+                    executes {
+                        showBattleRoyalUI(it["player"])
                     }
                 }
             }
@@ -97,6 +110,12 @@ object CommandManager {
     private fun makeBattleRoyalMap(player: Player) {
         DataManager.getMarmotte(player).game?.let {
             player.inventory.addItem(BattleRoyalMap(it).item)
+        }
+    }
+
+    private fun showBattleRoyalUI(player: Player) {
+        DataManager.getMarmotte(player).game?.let {
+            player.openFrame(it.mainInv)
         }
     }
 

@@ -1,7 +1,9 @@
 package io.github.anblusis.netBattleRoyal.game
 import io.github.anblusis.netBattleRoyal.data.*
 import io.github.anblusis.netBattleRoyal.data.DataManager.getMarmotte
+import io.github.anblusis.netBattleRoyal.inv.InvManager
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
+import io.github.monun.invfx.frame.InvFrame
 import io.github.monun.tap.task.Ticker
 import io.github.monun.tap.task.TickerTask
 import org.bukkit.Location
@@ -15,17 +17,17 @@ import kotlin.math.abs
 class Game(
     worldName: String,
     val mode: Int,
-    val players: MutableList<Player>
+    private val players: MutableList<Player>
 ) {
     lateinit var chests: MutableList<RoyalChest>
     lateinit var regions: List<Region>
     lateinit var world: World
     lateinit var center: Location
-    lateinit var worldBorder: WorldBorder
+    lateinit var chestTables: HashMap<ChestType, ChestLootTable>
+    private lateinit var worldBorder: WorldBorder
     private lateinit var chestLocations: List<ChestData>
-    private lateinit var chestTables: HashMap<ChestType, ChestLootTable>
     private val task: TickerTask
-    private val
+    internal val mainInv: InvFrame
 
     private var chestCount: Int = 0
     val maps: MutableList<BattleRoyalMap> = mutableListOf()
@@ -43,6 +45,7 @@ class Game(
         setChests()
 
         task = plugin.ticker.runTaskTimer(this::onTick, 0L, 1L)
+        mainInv = InvManager.createMainInv(this)
     }
 
     private fun onTick() {
