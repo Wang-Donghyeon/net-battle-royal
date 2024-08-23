@@ -7,12 +7,14 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.*
 import java.awt.Color
+import java.awt.Image
+import java.awt.image.BufferedImage
 import kotlin.math.pow
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 data class BattleRoyalMap(private val game: Game) {
     val item = BattleRoyalItemData.BATTLE_ROYAL_MAP.item
-    val view: MapView
+    private val view: MapView
 
     init {
         game.maps.add(this)
@@ -37,6 +39,13 @@ data class BattleRoyalMap(private val game: Game) {
         item.itemMeta = (item.itemMeta as MapMeta).apply {
             mapView = view
         }
+    }
+}
+
+object ImageMapRenderer : MapRenderer() {
+    override fun render(mapView: MapView, mapCanvas: MapCanvas, player: Player) {
+        val game = DataManager.getMarmotte(player).game ?: return
+        mapCanvas.drawImage(0, 0,  game.mapImage.getScaledInstance(128, 128, Image.SCALE_SMOOTH))
     }
 }
 

@@ -3,6 +3,8 @@ import io.github.anblusis.netBattleRoyal.data.*
 import io.github.anblusis.netBattleRoyal.data.DataManager.getMarmotte
 import io.github.anblusis.netBattleRoyal.inv.InvManager
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
+import io.github.anblusis.netBattleRoyal.world.City
+import io.github.anblusis.netBattleRoyal.world.WorldData
 import io.github.monun.invfx.frame.InvFrame
 import io.github.monun.tap.task.Ticker
 import io.github.monun.tap.task.TickerTask
@@ -12,6 +14,7 @@ import org.bukkit.WorldBorder
 import org.bukkit.entity.Player
 import org.bukkit.map.MapRenderer
 import org.bukkit.util.Vector
+import java.awt.image.BufferedImage
 import kotlin.math.abs
 
 class Game(
@@ -24,6 +27,7 @@ class Game(
     lateinit var world: World
     lateinit var center: Location
     lateinit var chestTables: HashMap<ChestType, ChestLootTable>
+    lateinit var mapImage: BufferedImage
     private lateinit var worldBorder: WorldBorder
     private lateinit var chestLocations: List<ChestData>
     private val task: TickerTask
@@ -74,19 +78,17 @@ class Game(
 
         when (worldName) {
             "world" -> {
-                center = Vector(-248.0, 0.0, 840.0).toLocation(world)
-                worldBorder.size = 380.0
-                chestCount = 100
-                chestLocations = mutableListOf()
-                regions = mutableListOf()
+                center = City.center
+                worldBorder.size = City.worldBorderSize
+                chestCount = City.chestCount
+                chestLocations = City.chestLocations
+                regions = City.regions
+                chestTables = City.chestTables
+                mapImage = City.mapImage
             }
         }
 
         worldBorder.center = center
-
-        chestTables[ChestType.NORMAL] = ChestLootTable(listOf(), listOf())
-        chestTables[ChestType.RARE] = ChestLootTable(listOf(), listOf())
-        chestTables[ChestType.EPIC] = ChestLootTable(listOf(), listOf())
     }
 
     private fun registerPlayers(players: MutableList<Player>) {
