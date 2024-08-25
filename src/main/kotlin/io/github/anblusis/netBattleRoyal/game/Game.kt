@@ -14,13 +14,14 @@ import org.bukkit.WorldBorder
 import org.bukkit.entity.Player
 import org.bukkit.map.MapRenderer
 import org.bukkit.util.Vector
+import java.awt.Color
 import java.awt.image.BufferedImage
 import kotlin.math.abs
 
 class Game(
     worldName: String,
     val mode: Int,
-    private val players: MutableList<Player>
+    val players: MutableList<Player>
 ) {
     lateinit var chests: MutableList<RoyalChest>
     lateinit var regions: List<Region>
@@ -32,6 +33,8 @@ class Game(
     private lateinit var chestLocations: List<ChestData>
     private val task: TickerTask
     internal val mainInv: InvFrame
+    internal val worldBorderDots: HashMap<Pair<Int, Int>, Color?> = hashMapOf()
+    internal val chestRegionCount: HashMap<Region?, Int> = hashMapOf()
 
     private var chestCount: Int = 0
     val maps: MutableList<BattleRoyalMap> = mutableListOf()
@@ -54,6 +57,9 @@ class Game(
 
     private fun onTick() {
         chests.forEach { it.update() }
+        players.forEach {
+            getMarmotte(it).update()
+        }
     }
 
     private fun setChests() {
@@ -65,10 +71,14 @@ class Game(
         run {
             repeat(chestCount) {
                 if (leftChestLocations.isEmpty()) return@run
-                val chest = RoyalChest(this, leftChestLocations.first(), chestTables[chestLocations.first().type]!!)
+                val chest = RoyalChest(this, leftChestLocations.first(), chestTables[leftChestLocations.first().type]!!)
                 chests.add(chest)
                 leftChestLocations.removeFirst()
             }
+        }
+
+        chests.forEach {
+            chestRegionCount[it.region] = (chestRegionCount[it.region] ?: 0) + 1
         }
     }
 
@@ -78,13 +88,13 @@ class Game(
 
         when (worldName) {
             "world" -> {
-                center = City.center
-                worldBorder.size = City.worldBorderSize
-                chestCount = City.chestCount
-                chestLocations = City.chestLocations
-                regions = City.regions
-                chestTables = City.chestTables
-                mapImage = City.mapImage
+                center = City.getCenter()
+                worldBorder.size = City.getWorldBorderSize()
+                chestCount = City.getChestCount()
+                chestLocations = City.getChestLocations()
+                regions = City.getRegions()
+                chestTables = City.getChestTables()
+                mapImage = City.getMapImage()
             }
         }
 
@@ -106,7 +116,9 @@ class Game(
 
     fun remove() {
         task.cancel()
-        chests.forEach { it.remove() }
-        players.forEach { getMarmotte(it).leaveGame() }
+        val willRemovedChests = chests.toList()
+        willRemovedChests.forEach { it.remove() }
+        val willRemovedPlayers = players.toList()
+        willRemovedPlayers.forEach { getMarmotte(it).leaveGame() }
     }
 }

@@ -11,6 +11,12 @@ enum class Recipe(recipeName: String, val result: ItemStack, private val shape: 
         BattleRoyalItemData.MAGIC_SWORD.item,
         listOf(" A ", " B ", " A "),
         mapOf('A' to Material.DIAMOND, 'B' to Material.STICK)
+    ),
+
+    MAGIC_STICK("magic_stick",
+    BattleRoyalItemData.MAGIC_STICK.item,
+    listOf("AA ", " B ", " AA"),
+    mapOf('A' to Material.BLAZE_POWDER, 'B' to Material.STICK)
     );
 
     private val key = NamespacedKey(plugin, recipeName)

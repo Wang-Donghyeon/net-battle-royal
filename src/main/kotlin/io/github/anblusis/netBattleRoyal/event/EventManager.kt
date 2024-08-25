@@ -4,6 +4,7 @@ import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import io.papermc.paper.event.world.border.WorldBorderBoundsChangeEvent
 import io.papermc.paper.event.world.border.WorldBorderCenterChangeEvent
 import io.papermc.paper.event.world.border.WorldBorderEvent
+import org.bukkit.block.Chest
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -38,7 +39,7 @@ object EventManager : Listener {
     @EventHandler
     private fun onPlayerInventoryOpen(event: InventoryOpenEvent) {
         if (event.player !is Player) return
-        if (event.inventory.type == InventoryType.CHEST) {
+        if (event.inventory.holder is Chest) {
             playerOpenChest(this, event)
         }
     }

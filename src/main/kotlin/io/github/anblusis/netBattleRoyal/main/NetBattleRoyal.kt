@@ -6,6 +6,7 @@ import io.github.anblusis.netBattleRoyal.data.DataManager.addMarmotte
 import io.github.anblusis.netBattleRoyal.event.EventManager
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.monun.kommand.Kommand
+import io.github.monun.kommand.kommand
 import io.github.monun.tap.fake.FakeEntityServer
 import io.github.monun.tap.task.Ticker
 import io.github.monun.tap.task.TickerTask
@@ -26,16 +27,18 @@ class NetBattleRoyal : JavaPlugin() {
 
     override fun onLoad() {
         plugin = this
+
     }
 
     override fun onEnable() {
         EventManager.register()
-        CommandManager.register()
         DataManager.register()
         registerPlayer()
         registerRecipe()
+        registerCommand()
 
         fakeEntityManager = FakeEntityServer.create(this)
+        server.scheduler.runTaskTimer(this, ticker, 0L, 1L)
         ticker.runTaskTimer(fakeEntityManager::update, 0L, 1L)
     }
 
@@ -51,10 +54,17 @@ class NetBattleRoyal : JavaPlugin() {
         }
     }
 
+    private fun registerCommand() {
+        kommand {
+            CommandManager.register(this)
+        }
+    }
+
     override fun onDisable() {
         ticker.cancelAll()
         games.forEach { it.remove() }
         fakeEntityManager.clear()
         Recipe.values().forEach { it.removeFromServer() }
+        server.scheduler.cancelTasks(this)
     }
 }

@@ -5,17 +5,21 @@ import io.github.anblusis.netBattleRoyal.data.BattleRoyalMap
 import io.github.anblusis.netBattleRoyal.data.ChestType
 import io.github.anblusis.netBattleRoyal.data.DataManager
 import io.github.anblusis.netBattleRoyal.game.Game
+import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import io.github.monun.invfx.openFrame
+import io.github.monun.kommand.Kommand
 import io.github.monun.kommand.KommandArgument.Companion.dynamic
+import io.github.monun.kommand.PluginKommand
 import io.github.monun.kommand.kommand
 import net.kyori.adventure.text.Component.text
 import org.bukkit.Particle
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 
 object CommandManager {
-    fun register()  {
-        plugin.kommand {
+    fun register(kommand: PluginKommand)  {
+        kommand.register("netbattleroyal", "netbr") {
             val battleRoyalItemArgument = dynamic { _, input ->
                 BattleRoyalItemData.valueOf(input)
             }.apply {
@@ -23,9 +27,16 @@ object CommandManager {
                     suggest(BattleRoyalItemData.values().map { it.name })
                 }
             }
+            val worldArgument = dynamic { _, input ->
+                plugin.server.getWorld(input)
+            }.apply {
+                suggests {
+                    suggest(plugin.server.worlds.map { it.name })
+                }
+            }
 
-            register("giveBattleRoyalItem") {
-                requires { hasPermission(4) }
+            then("givebattleroyalitem") {
+                requires { isOp }
                 then("players" to players()) {
                     then("item" to battleRoyalItemArgument) {
                         executes {
@@ -39,59 +50,65 @@ object CommandManager {
                     }
                 }
             }
-            register("battleRoyalMap", "brmap") {
+            then("map") {
                 executes {
                     require(sender is Player)
                     makeBattleRoyalMap(sender as Player)
                 }
                 then("player" to player()) {
-                    requires { hasPermission(4) }
+                    requires { isOp }
                     executes {
                         makeBattleRoyalMap(it["player"])
                     }
                 }
             }
-            register("battleRoyalUI", "brui") {
+            then("ui") {
                 executes {
                     require(sender is Player)
                     showBattleRoyalUI(sender as Player)
                 }
                 then("player" to player()) {
-                    requires { hasPermission(4) }
+                    requires { isOp }
                     executes {
                         showBattleRoyalUI(it["player"])
                     }
                 }
             }
-            register("printChestsData") {
-                requires { hasPermission(4) }
+            then("printchestsdata") {
+                requires { isOp }
                 executes {
                     printChestsData()
                 }
             }
-            register("spawnParticleAtChestsData") {
-                requires { hasPermission(4) }
+            then("spawnparticleatchestsdata") {
+                requires { isOp }
                 executes {
                     spawnParticleAtChestsData()
                 }
             }
-            register("battleRoyal", "br") {
-                requires { hasPermission(4) }
-                then("createBattleRoyal") {
-                    then("map" to string()) {
-                        then("mode" to int()) {
-                            then("players" to players()) {
-                                executes {
-                                    createBattleRoyal(it["map"], it["mode"], it["players"])
-                                }
+            then("createbattleroyal") {
+                then("map" to string()) {
+                    then("mode" to int()) {
+                        then("players" to players()) {
+                            executes {
+                                createBattleRoyal(it["map"], it["mode"], it["players"])
                             }
                         }
                     }
                 }
-                then("removeBattleRoyal") {
+            }
+            then("removebattleroyal") {
+                then("player") {
                     then("player" to player()) {
                         executes {
-                            removeBattleRoyal(it["player"])
+                            removeBattleRoyal(DataManager.getMarmotte(it["player"]).game)
+                        }
+                    }
+                }
+                then("world") {
+                    then("world" to worldArgument) {
+                        executes {
+                            removeBattleRoyal(plugin.games.find { game -> game.world == it["world"] })
                         }
                     }
                 }
@@ -120,7 +137,7 @@ object CommandManager {
     }
 
     private fun printChestsData() {
-        val codeSnippet = StringBuilder("chests = mutableListOf(\n")
+        val codeSnippet = StringBuilder("chestLocations = listOf(\n")
 
         plugin.debugChestData.forEach { chestData ->
             val location = chestData.location
@@ -129,7 +146,7 @@ object CommandManager {
             codeSnippet.append(
                 """
                 ChestData(
-                    Location(Bukkit.getWorld("${location.world}"), ${location.x}, ${location.y}, ${location.z}),
+                    Location(world, ${location.x}, ${location.y}, ${location.z}),
                     ChestType.$type
                 ),
                 """.trimIndent()
@@ -145,8 +162,8 @@ object CommandManager {
         plugin.games.add(Game(map, mode, players.toMutableList()))
     }
 
-    private fun removeBattleRoyal(player: Player) {
-        DataManager.getMarmotte(player).game?.remove()
+    private fun removeBattleRoyal(game: Game?) {
+        game?.remove()
     }
 
     private fun spawnParticleAtChestsData() {

@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 fun worldBorderChange(listener: EventManager, event: WorldBorderEvent) : EventResult {
     plugin.games.filter { game -> game.world == event.world }.forEach { game ->
         game.maps.forEach {
-            map -> map.resetRenderers()
+
         }
     }
     return EventResult.WORLD_BORDER_CHANGE
