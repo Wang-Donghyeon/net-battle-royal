@@ -15,4 +15,5 @@ fun playerDamaged(listener: EventManager, event: EntityDamageEvent) : EventResul
             return EventResult.PLAYER_DAMAGED
         }
     }
+    return EventResult.FAIL
 }

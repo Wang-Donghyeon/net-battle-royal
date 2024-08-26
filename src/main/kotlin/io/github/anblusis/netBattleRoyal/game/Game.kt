@@ -29,6 +29,7 @@ class Game(
     internal lateinit var mapImage: BufferedImage
     internal lateinit var worldBorder: WorldBorder
     internal lateinit var state: GameState
+    internal lateinit var mapColors: ByteArray
     private lateinit var chestLocations: List<ChestData>
     private val tickTask: TickerTask
     internal val mainInv: InvFrame
@@ -112,6 +113,7 @@ class Game(
                 regions = City.getRegions()
                 chestTables = City.getChestTables()
                 mapImage = City.getMapImage()
+                mapColors = City.getMapColors()
             }
         }
 

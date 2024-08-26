@@ -17,7 +17,7 @@ import kotlin.math.min
 import kotlin.math.pow
 import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
-data class BattleRoyalMap(private val game: Game) {
+data class BattleRoyalMap(private val game: Game, private val hasRender: Boolean = true) {
     val item = BattleRoyalItemData.BATTLE_ROYAL_MAP.item
     private val view: MapView
 
@@ -31,11 +31,13 @@ data class BattleRoyalMap(private val game: Game) {
         view.isUnlimitedTracking = true
         view.isTrackingPosition = true
 
-        view.apply {
-            renderers.clear()
-            addRenderer(ImageMapRenderer)
-            addRenderer(WorldBorderRenderer)
-            addRenderer(RegionRenderer)
+        if (hasRender) {
+            view.apply {
+                renderers.clear()
+                addRenderer(ImageMapRenderer)
+                addRenderer(WorldBorderRenderer)
+                addRenderer(RegionRenderer)
+            }
         }
 
         item.itemMeta = (item.itemMeta as MapMeta).apply {
@@ -47,7 +49,13 @@ data class BattleRoyalMap(private val game: Game) {
 object ImageMapRenderer : MapRenderer() {
     override fun render(mapView: MapView, mapCanvas: MapCanvas, player: Player) {
         val game = DataManager.getMarmotte(player).game ?: return
-        mapCanvas.drawImage(0, 0,  game.mapImage.getScaledInstance(128, 128, Image.SCALE_SMOOTH))
+
+        game.mapColors.forEachIndexed { index, color ->
+            val x = index % 128
+            val y = index / 128
+            mapCanvas.setPixel(x, y, color)
+        }
+        // mapCanvas.drawImage(0, 0,  game.mapImage.getScaledInstance(128, 128, Image.SCALE_SMOOTH))
     }
 }
 

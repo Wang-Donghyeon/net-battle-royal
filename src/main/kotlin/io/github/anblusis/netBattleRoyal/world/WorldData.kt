@@ -21,4 +21,6 @@ internal interface WorldData {
     fun getChestTables(): HashMap<ChestType, ChestLootTable>
 
     fun getMapImage(): BufferedImage
+
+    fun getMapColors(): ByteArray
 }
