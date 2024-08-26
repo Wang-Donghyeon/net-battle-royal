@@ -8,4 +8,5 @@ enum class EventResult {
     OPEN_CHEST,
     OPEN_ROYALE_CHEST,
     WORLD_BORDER_CHANGE,
+    PLAYER_DAMAGED
 }

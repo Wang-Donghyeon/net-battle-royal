@@ -23,17 +23,19 @@ data class Marmotte(val player: Player) {
         }
 
     private fun updateBossBar() {
-        bossBar?.setTitle(region?.displayName ?: "지역 없음")
-
         val allChestCount = game!!.chestRegionCount[region] ?: 0
-        if (allChestCount == 0) {
-            bossBar?.progress = 0.0
-            return
-        }
-
         val leftChestCount = game!!.chests.count { it.region == region && !it.isOpened }
 
-        bossBar?.progress = leftChestCount.toDouble() / allChestCount
+        val tasks = game!!.tasks.filter { it.regions.isEmpty() || it.regions.contains(region) }
+        val firstTask = tasks.minByOrNull { it.tick - it.priority * 1200 }
+
+        if (firstTask != null) {
+            bossBar?.setTitle("${region?.displayName ?: "지역 없음"}, 상자 개수: $leftChestCount / $allChestCount | ${firstTask.displayName}")
+            bossBar?.progress = firstTask.tick.toDouble() / firstTask.maxTick
+        } else {
+            bossBar?.setTitle("${region?.displayName ?: "지역 없음"}, 상자 개수: $leftChestCount / $allChestCount")
+            bossBar?.progress = 1.0
+        }
     }
 
     fun update() {

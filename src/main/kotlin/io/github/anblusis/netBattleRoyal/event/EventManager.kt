@@ -10,6 +10,7 @@ import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerInteractEvent
@@ -52,5 +53,10 @@ object EventManager : Listener {
     @EventHandler
     private fun onWorldBorderCenterChange(event: WorldBorderCenterChangeEvent) {
         worldBorderChange(this, event)
+    }
+
+    @EventHandler
+    private fun onPlayerDamaged(event: EntityDamageEvent) {
+        if (event.entity is Player) playerDamaged(this, event)
     }
 }

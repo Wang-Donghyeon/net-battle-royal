@@ -2,17 +2,12 @@ package io.github.anblusis.netBattleRoyal.data
 
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
-import io.github.monun.tap.fake.FakeEntity
-import io.github.monun.tap.fake.FakeEntityServer
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
-import org.bukkit.Color
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.block.BlockState
 import org.bukkit.block.Chest
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.TextDisplay
 import org.bukkit.inventory.ItemStack
 import kotlin.math.ln
@@ -30,7 +25,8 @@ enum class ChestType(val rating: String, val color: TextColor, val material: Mat
 data class RoyalChest(val game: Game, val chestData: ChestData, val table: ChestLootTable) {
 
     var isOpened: Boolean
-    private val fakeEntity: FakeEntity<TextDisplay>
+    private val entity: TextDisplay
+    private var openTick: Int = 0
 
     val location
         get() = chestData.location
@@ -47,13 +43,11 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
             facing = this.faces.random()
         }
 
-        fakeEntity = plugin.fakeEntityManager.spawnEntity(location.clone().add(0.5, 1.5, 0.5), TextDisplay::class.java).apply {
-            updateMetadata {
-                text(text("${chestData.type.rating} 상자").color(chestData.type.color))
-            }
+
+        entity = location.world.spawn(location.clone().add(0.5, 1.5, 0.5), TextDisplay::class.java).apply {
+            text(text("${chestData.type.rating} 상자").color(chestData.type.color))
         }
-        // todo: 이거 띄우기
-        plugin.server.broadcast(text("엔티티 위치: ${fakeEntity.location}"))
+        plugin.server.broadcast(text("엔티티 위치: ${entity.location}"))
         isOpened = false
 
         setContent()
@@ -61,7 +55,6 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
 
     private fun setContent() {
         val items = table.generateItems(region)
-        plugin.server.broadcast(text(items.joinToString { it?.type?.name ?: "null" }))
         (location.block.state as Chest).inventory.contents = items
     }
 
@@ -69,11 +62,9 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
         if (isOpened) return
         isOpened = true
 
-        fakeEntity.updateMetadata {
-            customName(text("열린 상자").color(NamedTextColor.GRAY))
-        }
+        entity.text(text("열린 상자 (${openTick / 20}초 전)").color(NamedTextColor.GRAY))
 
-        plugin.server.broadcast(text("상자가 열렸습니다. 엔티티 위치: ${fakeEntity.location}"))
+        plugin.server.broadcast(text("상자가 열렸습니다. 엔티티 위치: ${entity.location}"))
     }
 
     fun update() {
@@ -81,6 +72,7 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
             remove()
             return
         }
+        if (isOpened) openTick++
     }
 
     fun remove() {
@@ -88,7 +80,7 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
             location.block.type = Material.AIR
         }
         game.chests.remove(this)
-        fakeEntity.remove()
+        entity.remove()
     }
 }
 
