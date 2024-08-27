@@ -30,11 +30,13 @@ class Game(
     internal lateinit var worldBorder: WorldBorder
     internal lateinit var state: GameState
     internal lateinit var mapColors: List<Byte>
+    internal lateinit var targetWorldBorderCenter: Location
     private lateinit var chestLocations: List<ChestData>
     private val tickTask: TickerTask
     internal val mainInv: InvFrame
 
     private var chestCount: Int = 0
+    internal var targetWorldBorderSize: Double = 0.0
     internal val worldBorderDots: HashMap<Pair<Int, Int>, Color?> = hashMapOf()
     internal val chestRegionCount: HashMap<Region?, Int> = hashMapOf()
     internal val tasks: MutableList<GameTask> = mutableListOf()
@@ -118,6 +120,8 @@ class Game(
         }
 
         worldBorder.center = center
+        targetWorldBorderCenter = worldBorderCenter
+        targetWorldBorderSize = worldBorderSize
     }
 
     private fun registerPlayers(players: MutableList<Player>) {
@@ -127,7 +131,7 @@ class Game(
     }
 
     private fun registerEvent() {
-        tasks.add(GameTask(this, WorldBorderDecrease(this, 600), "월드보더 감소", 9000, 6000, 0, true))
+        tasks.add(GameTask(this, WorldBorderDecrease(this, 1200), "월드보더 감소", 9000, 6000, 0, true))
         tasks.add(GameTask(this, FightStart(this, 3000), "무적 해제", 3000, 3000, 1, false))
     }
 

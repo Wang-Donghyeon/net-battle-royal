@@ -8,8 +8,10 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Chest
+import org.bukkit.entity.Display
 import org.bukkit.entity.TextDisplay
 import org.bukkit.inventory.ItemStack
+import org.bukkit.util.Transformation
 import kotlin.math.ln
 import kotlin.math.min
 import kotlin.random.Random
@@ -44,10 +46,11 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
         }
 
 
-        entity = location.world.spawn(location.clone().add(0.5, 1.5, 0.5), TextDisplay::class.java).apply {
+        entity = location.world.spawn(location.clone().add(0.5, 1.2, 0.5), TextDisplay::class.java).apply {
             text(text("${chestData.type.rating} 상자").color(chestData.type.color))
+            billboard = Display.Billboard.CENTER
+            viewRange = 0.1f
         }
-        plugin.server.broadcast(text("엔티티 위치: ${entity.location}"))
         isOpened = false
 
         setContent()
@@ -61,10 +64,6 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
     fun open() {
         if (isOpened) return
         isOpened = true
-
-        entity.text(text("열린 상자 (${openTick / 20}초 전)").color(NamedTextColor.GRAY))
-
-        plugin.server.broadcast(text("상자가 열렸습니다. 엔티티 위치: ${entity.location}"))
     }
 
     fun update() {
@@ -76,7 +75,6 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
             openTick++
             entity.text(text("열린 상자 (${openTick / 20}초 전)").color(NamedTextColor.GRAY))
         }
-        entity.location.direction = entity.location.clone().subtract(game.players.minByOrNull { it.location.distance(location) }?.location ?: return).toVector()
     }
 
     fun remove() {

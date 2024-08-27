@@ -30,10 +30,10 @@ data class Marmotte(val player: Player) {
         val firstTask = tasks.minByOrNull { it.tick - it.priority * 1200 }
 
         if (firstTask != null) {
-            bossBar?.setTitle("${region?.displayName ?: "지역 없음"}, 상자 개수: $leftChestCount / $allChestCount | ${firstTask.displayName}")
+            bossBar?.setTitle("${region?.displayName ?: "지역 없음"} ($leftChestCount / $allChestCount) | ${firstTask.displayName}")
             bossBar?.progress = firstTask.tick.toDouble() / firstTask.maxTick
         } else {
-            bossBar?.setTitle("${region?.displayName ?: "지역 없음"}, 상자 개수: $leftChestCount / $allChestCount")
+            bossBar?.setTitle("${region?.displayName ?: "지역 없음"} ($leftChestCount / $allChestCount)")
             bossBar?.progress = 1.0
         }
     }

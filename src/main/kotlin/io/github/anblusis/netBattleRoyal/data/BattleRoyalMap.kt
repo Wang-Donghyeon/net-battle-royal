@@ -3,19 +3,12 @@ package io.github.anblusis.netBattleRoyal.data
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import net.kyori.adventure.text.Component.text
-import net.kyori.adventure.text.format.NamedTextColor
-import net.kyori.adventure.text.format.Style.style
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.*
-import org.bukkit.util.Vector
 import java.awt.Color
-import java.awt.Image
-import java.awt.image.BufferedImage
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.pow
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 data class BattleRoyalMap(private val game: Game, private val hasRender: Boolean = true) {
     val item = BattleRoyalItemData.BATTLE_ROYAL_MAP.item
@@ -63,8 +56,8 @@ object WorldBorderRenderer : MapRenderer() {
     override fun render(mapView: MapView, mapCanvas: MapCanvas, player: Player) {
 
         val game = DataManager.getMarmotte(player).game ?: return
-        val centerX = game.center.blockX
-        val centerZ = game.center.blockZ
+        val centerX = mapView.centerX
+        val centerZ = mapView.centerZ
         val size = (game.worldBorderSize / 2).toInt()
         val scale = (2.0).pow(mapView.scale.value.toDouble())
 
@@ -82,6 +75,23 @@ object WorldBorderRenderer : MapRenderer() {
                         if (!game.worldBorderDots.containsKey(Pair(relativeX, relativeZ))) {
                             game.worldBorderDots[Pair(relativeX, relativeZ)] = mapCanvas.getPixelColor(relativeX, relativeZ)
                             mapCanvas.setPixelColor(relativeX, relativeZ, Color.RED)
+                        }
+                    }
+                }
+            }
+        }
+
+        val targetSize = (game.targetWorldBorderSize / 2).toInt()
+
+        for (x in -targetSize..targetSize) {
+            for (z in -targetSize..targetSize) {
+                if (x == -targetSize || x == targetSize || z == -targetSize || z == targetSize) {
+                    val relativeX = 64 + ((game.targetWorldBorderCenter.blockX - centerX + x) / scale).toInt()
+                    val relativeZ = 64 + ((game.targetWorldBorderCenter.blockZ - centerZ + z) / scale).toInt()
+                    if (relativeX in 0..127 && relativeZ in 0..127) {
+                        if (!game.worldBorderDots.containsKey(Pair(relativeX, relativeZ))) {
+                            game.worldBorderDots[Pair(relativeX, relativeZ)] = mapCanvas.getPixelColor(relativeX, relativeZ)
+                            mapCanvas.setPixelColor(relativeX, relativeZ, Color.cyan)
                         }
                     }
                 }

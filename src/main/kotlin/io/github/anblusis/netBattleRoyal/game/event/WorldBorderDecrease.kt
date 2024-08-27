@@ -16,14 +16,17 @@ class WorldBorderDecrease(
     private val tick: Int
 ): Runnable {
     override fun run() {
-        val sizeDecrease = game.worldBorderSize * 0.3
+        val sizeDecrease = game.worldBorderSize * Random.nextDouble(0.25, 0.35)
         val size = game.worldBorderSize - sizeDecrease
         val randomVector = Vector(
-            Random.nextDouble(-sizeDecrease, sizeDecrease),
+            Random.nextDouble(-sizeDecrease / 2, sizeDecrease / 2),
             0.0,
-            Random.nextDouble(-sizeDecrease, sizeDecrease)
+            Random.nextDouble(-sizeDecrease / 2, sizeDecrease / 2)
         )
         val center = game.worldBorderCenter.add(randomVector)
+
+        game.targetWorldBorderCenter = center.clone()
+        game.targetWorldBorderSize = size
 
         game.players.forEach {
             it.showTitle(
@@ -31,25 +34,25 @@ class WorldBorderDecrease(
                     text(""),
                     text("월드보더가 ${tick / 20}초에 걸쳐 변화합니다.").color(NamedTextColor.AQUA),
                     Title.Times.times(
-                        Duration.ofMillis(5),
+                        Duration.ofMillis(500),
                         Duration.ofSeconds(2),
-                        Duration.ofMillis(5)
+                        Duration.ofMillis(500)
                     )
                 )
             )
             it.sendMessage(
                 text("중심 위치: ")
                     .append(text("${center.blockX}, ${center.blockZ} ").color(NamedTextColor.GREEN))
-                        .append(text("(${center.distance(it.location).toInt()} 블록 거리)"))
+                        .append(text("(처음에서 ${center.distance(game.worldBorderCenter).toInt()} 블록 거리)"))
             )
             it.sendMessage(
                 text("경계 크기: ")
-                    .append(text("$size ").color(NamedTextColor.GREEN))
-                        .append(text("(${sizeDecrease} 블록 감소)"))
+                    .append(text("${size.toInt()} ").color(NamedTextColor.GREEN))
+                        .append(text("(처음에서 ${sizeDecrease.toInt()} 블록 감소)"))
             )
         }
 
-        game.worldBorder.setSize(size, (tick * 20).toLong())
+        game.worldBorder.setSize(size, (tick.toDouble() / 20).toLong())
         val offSetLocation = center.subtract(game.worldBorderCenter).multiply(1.0 / tick)
         var moveTick = 0
         lateinit var task: TickerTask
