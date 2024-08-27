@@ -29,7 +29,7 @@ class Game(
     internal lateinit var mapImage: BufferedImage
     internal lateinit var worldBorder: WorldBorder
     internal lateinit var state: GameState
-    internal lateinit var mapColors: ByteArray
+    internal lateinit var mapColors: List<Byte>
     private lateinit var chestLocations: List<ChestData>
     private val tickTask: TickerTask
     internal val mainInv: InvFrame

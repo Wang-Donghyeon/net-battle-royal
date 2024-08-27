@@ -22,5 +22,5 @@ internal interface WorldData {
 
     fun getMapImage(): BufferedImage
 
-    fun getMapColors(): ByteArray
+    fun getMapColors(): List<Byte>
 }

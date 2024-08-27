@@ -72,7 +72,11 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
             remove()
             return
         }
-        if (isOpened) openTick++
+        if (isOpened) {
+            openTick++
+            entity.text(text("열린 상자 (${openTick / 20}초 전)").color(NamedTextColor.GRAY))
+        }
+        entity.location.direction = entity.location.clone().subtract(game.players.minByOrNull { it.location.distance(location) }?.location ?: return).toVector()
     }
 
     fun remove() {

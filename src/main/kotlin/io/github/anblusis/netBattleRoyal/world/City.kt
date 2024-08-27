@@ -472,8 +472,8 @@ object City : WorldData {
         }
     }
 
-    override fun getMapColors(): ByteArray =
-        byteArrayOf(
+    override fun getMapColors(): List<Byte> =
+        listOf(
         5,
         5,
         5,
