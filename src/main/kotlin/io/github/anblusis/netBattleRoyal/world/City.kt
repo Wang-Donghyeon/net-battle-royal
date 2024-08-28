@@ -1,6 +1,7 @@
 package io.github.anblusis.netBattleRoyal.world
 
 import io.github.anblusis.netBattleRoyal.data.*
+import io.github.anblusis.netBattleRoyal.game.GameWeather
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import org.bukkit.Location
 import org.bukkit.Material
@@ -14,6 +15,9 @@ object City : WorldData {
 
     override fun getCenter(): Location =
         Location(world, -291.50, 0.0, 821.50)
+
+    override fun getWorldDefaultWeather(): GameWeather =
+        GameWeather.SUNNY
 
     override fun getWorldBorderSize(): Double =
         500.0
