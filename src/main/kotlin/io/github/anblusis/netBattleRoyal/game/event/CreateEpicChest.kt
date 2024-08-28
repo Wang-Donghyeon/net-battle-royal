@@ -13,7 +13,10 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.entity.BlockDisplay
+import org.bukkit.util.Transformation
+import org.joml.AxisAngle4f
 import org.joml.Matrix4f
+import org.joml.Vector3f
 import java.time.Duration
 import kotlin.random.Random
 
@@ -41,14 +44,29 @@ class CreateEpicChest(
             x += (Random.nextDouble() - 0.5) * region.width
             y = world.maxHeight.toDouble()
             z += (Random.nextDouble() - 0.5) * region.height
-        }
+        }.toBlockLocation()
         val blockDisplay = world.spawn(spawnLocation, BlockDisplay::class.java).apply {
             block = Material.CHEST.createBlockData()
         }
-        val glassDisplay = world.spawn(spawnLocation, BlockDisplay::class.java).apply {
+        val glassDisplay = world.spawn(spawnLocation.clone().apply {
+            x -= 0.25
+            y -= 0.25
+            z -= 0.25
+        }, BlockDisplay::class.java).apply {
             block = Material.GLASS.createBlockData()
             setTransformationMatrix(Matrix4f().scale(1.5f))
         }
+        val endRodDisplay = world.spawn(spawnLocation.clone().apply {
+            x -= 0.5
+            y = world.getHighestBlockAt(spawnLocation).y.toDouble()
+            z -= 0.5
+        }, BlockDisplay::class.java).apply {
+            block = Material.END_ROD.createBlockData()
+            setTransformationMatrix(Matrix4f().scale(2f, (world.maxHeight - world.minHeight).toFloat(), 2f)) // Scale vertically
+        }
+        game.entities.add(blockDisplay)
+        game.entities.add(glassDisplay)
+        game.entities.add(endRodDisplay)
 
         lateinit var belowBlock: Block
         lateinit var task: TickerTask
@@ -56,16 +74,22 @@ class CreateEpicChest(
         task = plugin.ticker.runTaskTimer({
             belowBlock = blockDisplay.location.clone().subtract(0.0, 0.1, 0.0).block
             if (belowBlock.type.isSolid || belowBlock.location.y < 0) {
+                game.entities.remove(blockDisplay)
+                game.entities.remove(glassDisplay)
+                game.entities.remove(endRodDisplay)
                 blockDisplay.remove()
                 glassDisplay.remove()
+                endRodDisplay.remove()
                 world.playSound(blockDisplay.location, Sound.BLOCK_GLASS_BREAK, 1f, 1f)
                 world.spawnParticle(Particle.BLOCK_CRACK, blockDisplay.location.toCenterLocation(), 10, 0.75, 0.75, 0.75, 0.0, Material.GLASS.createBlockData())
                 task.cancel()
                 createChest(blockDisplay.location)
                 return@runTaskTimer
             }
-            blockDisplay.location.subtract(0.0, 0.5, 0.0)
-            glassDisplay.location.subtract(0.0, 0.5, 0.0)
+            blockDisplay.teleport(blockDisplay.location.add(0.0, -0.5, 0.0))
+            glassDisplay.teleport(glassDisplay.location.add(0.0, -0.5, 0.0))
+            endRodDisplay.teleport(endRodDisplay.location.apply { y = world.getHighestBlockAt(spawnLocation).y.toDouble() })
+            // todo: endRod 회전 만들기
         }, 0L, 1L)
     }
 

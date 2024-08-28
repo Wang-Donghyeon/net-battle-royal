@@ -11,6 +11,7 @@ import io.github.monun.tap.task.TickerTask
 import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.WorldBorder
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import java.awt.Color
 import java.awt.image.BufferedImage
@@ -31,6 +32,7 @@ class Game(
     internal lateinit var state: GameState
     internal lateinit var mapColors: List<Byte>
     internal lateinit var targetWorldBorderCenter: Location
+    internal lateinit var worldDefaultWeather: GameWeather
     private lateinit var chestLocations: List<ChestData>
     private val tickTask: TickerTask
     internal val mainInv: InvFrame
@@ -42,6 +44,7 @@ class Game(
     internal val chestRegionCount: HashMap<Region?, Int> = hashMapOf()
     internal val tasks: MutableList<GameTask> = mutableListOf()
     internal val maps: MutableList<BattleRoyalMap> = mutableListOf()
+    internal val entities: MutableList<Entity> = mutableListOf()
 
     val worldBorderCenter
         get() = worldBorder.center
@@ -81,6 +84,7 @@ class Game(
         }
 
         if (state == GameState.PLAYING) worldTime += 3L
+        if (worldTime >= 24000L) worldTime = 0L
         world.time = worldTime
     }
 
@@ -114,6 +118,7 @@ class Game(
         when (worldName) {
             "world" -> {
                 center = City.getCenter()
+                worldDefaultWeather = City.getWorldDefaultWeather()
                 worldBorder.size = City.getWorldBorderSize()
                 chestCount = City.getChestCount()
                 chestLocations = City.getChestLocations()
@@ -122,6 +127,10 @@ class Game(
                 mapImage = City.getMapImage()
                 mapColors = City.getMapColors()
             }
+        }
+
+        regions.forEach { region ->
+            region.gameWeather = worldDefaultWeather
         }
 
         worldBorder.center = center
@@ -136,7 +145,7 @@ class Game(
     }
 
     private fun registerEvent() {
-        tasks.add(GameTask(this, FightStart(this, 3000), "무적 해제", 3000, 3000, 1, false))
+        tasks.add(GameTask(this, FightStart(this, 3000), "무적 해제", 300, 3000, 1, false))
     }
 
     fun isInRegion(region: Region, spot: Location): Boolean {
@@ -146,8 +155,20 @@ class Game(
         return dx <= region.width / 2 && dz <= region.height / 2
     }
 
+    fun isInWorldBorder(spot: Location, checkTarget: Boolean): Boolean {
+        val center = if (checkTarget) targetWorldBorderCenter else worldBorderCenter
+        val size = if (checkTarget) targetWorldBorderSize else worldBorderSize
+
+        val dx = abs(spot.x - center.x)
+        val dz = abs(spot.z - center.z)
+        return dx <= size / 2 && dz <= size / 2
+    }
+
     fun remove() {
         tickTask.cancel()
+        entities.forEach {
+            it.remove()
+        }
         val willRemovedChests = chests.toList()
         willRemovedChests.forEach { it.remove() }
         val willRemovedPlayers = players.toList()

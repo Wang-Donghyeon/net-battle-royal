@@ -49,10 +49,10 @@ class FightStart(
             tasks.add(
                 GameTask(
                     this,
-                    CreateRandomEvent(this, 1200, RandomGameEvent.values()),
+                    CreateRandomEvent(this, 120, RandomGameEvent.values()),
                     "무작위 사건 타이머",
-                    7200,
-                    7200,
+                    120,
+                    720,
                     -999,
                     true
                 )

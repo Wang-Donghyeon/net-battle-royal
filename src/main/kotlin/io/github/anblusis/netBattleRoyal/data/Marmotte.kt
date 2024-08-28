@@ -4,6 +4,7 @@ import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.WeatherType
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarFlag
 import org.bukkit.boss.BarStyle
@@ -43,8 +44,8 @@ data class Marmotte(val player: Player) {
         updateWeather()
     }
 
-    fun updateWeather() {
-        val weather = region?.gameWeather?.weather ?: return
+    private fun updateWeather() {
+        val weather = region?.gameWeather?.weather ?: game!!.worldDefaultWeather.weather
         if (weather != player.playerWeather) player.setPlayerWeather(weather)
     }
 
