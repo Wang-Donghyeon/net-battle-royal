@@ -6,7 +6,6 @@ import io.github.monun.tap.task.TickerTask
 import net.kyori.adventure.title.Title
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
-import org.bukkit.Location
 import org.bukkit.util.Vector
 import java.time.Duration
 import kotlin.random.Random

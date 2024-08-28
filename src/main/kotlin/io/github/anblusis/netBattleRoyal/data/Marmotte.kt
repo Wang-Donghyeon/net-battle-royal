@@ -40,6 +40,12 @@ data class Marmotte(val player: Player) {
 
     fun update() {
         updateBossBar()
+        updateWeather()
+    }
+
+    fun updateWeather() {
+        val weather = region?.gameWeather?.weather ?: return
+        if (weather != player.playerWeather) player.setPlayerWeather(weather)
     }
 
     fun joinGame(game: Game) {

@@ -477,10 +477,8 @@ object City : WorldData {
             ?: throw IllegalArgumentException("Resource not found: /datas/city.txt")
 
         return data.bufferedReader().use { reader ->
-            // 파일 내용을 한 줄로 읽음
             val content = reader.readText().trim()
 
-            // 쉼표를 기준으로 분리하여 각 항목을 Byte로 변환 후 리스트로 반환
             content.split(",")
                 .map { it.trim().toByte() }
         }

@@ -35,6 +35,7 @@ class Game(
     private val tickTask: TickerTask
     internal val mainInv: InvFrame
 
+    private var worldTime: Long = 12000L
     private var chestCount: Int = 0
     internal var targetWorldBorderSize: Double = 0.0
     internal val worldBorderDots: HashMap<Pair<Int, Int>, Color?> = hashMapOf()
@@ -78,6 +79,9 @@ class Game(
 
             task.run()
         }
+
+        if (state == GameState.PLAYING) worldTime += 3L
+        world.time = worldTime
     }
 
     private fun setChests() {
@@ -106,6 +110,7 @@ class Game(
         world = plugin.server.getWorld(worldName)!!
         worldBorder = world.worldBorder
 
+
         when (worldName) {
             "world" -> {
                 center = City.getCenter()
@@ -131,7 +136,6 @@ class Game(
     }
 
     private fun registerEvent() {
-        tasks.add(GameTask(this, WorldBorderDecrease(this, 1200), "월드보더 감소", 9000, 6000, 0, true))
         tasks.add(GameTask(this, FightStart(this, 3000), "무적 해제", 3000, 3000, 1, false))
     }
 

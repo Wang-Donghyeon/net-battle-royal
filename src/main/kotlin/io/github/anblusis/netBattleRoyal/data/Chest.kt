@@ -31,7 +31,7 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
     private var openTick: Int = 0
 
     val location
-        get() = chestData.location
+        get() = chestData.location.toBlockLocation()
 
     val region: Region?
         get() {
