@@ -12,12 +12,11 @@ import kotlin.math.pow
 
 data class BattleRoyalMap(private val game: Game, private val hasRender: Boolean = true) {
     val item = BattleRoyalItemData.BATTLE_ROYAL_MAP.item
-    private val view: MapView
 
     init {
         game.maps.add(this)
 
-        view = plugin.server.createMap(game.world)
+        val view = plugin.server.createMap(game.world)
         view.centerX = game.center.blockX
         view.centerZ = game.center.blockZ
         view.scale = MapView.Scale.NORMAL
@@ -103,27 +102,26 @@ object WorldBorderRenderer : MapRenderer() {
 object RegionRenderer : MapRenderer() {
     override fun render(mapView: MapView, mapCanvas: MapCanvas, player: Player) {
         val game = DataManager.getMarmotte(player).game ?: return
-        if (mapCanvas.cursors.size() < game.regions.size) {
-            val scale = (2.0).pow(mapView.scale.value.toDouble())
 
-            game.regions.forEach { region ->
-                var relativeX = 64 + ((region.center.blockX - mapView.centerX) / scale).toInt()
-                var relativeZ = 64 + ((region.center.blockZ - mapView.centerZ) / scale).toInt()
-                if (relativeX in 0..127 && relativeZ in 0..127) {
-                    relativeX = (relativeX * 2) - 128
-                    // 6 빼는건 일종의 보정
-                    relativeZ = max((relativeZ * 2) - 128 - 6, -128)
-                    val cursor = MapCursor(
-                        relativeX.toByte(),
-                        relativeZ.toByte(),
-                        0,
-                        MapCursor.Type.BLUE_POINTER,
-                        true,
-                        text(region.displayName)
-                    )
+        mapCanvas.cursors = MapCursorCollection()
+        val scale = (2.0).pow(mapView.scale.value.toDouble())
+        game.regions.forEach { region ->
+            var relativeX = 64 + ((region.center.blockX - mapView.centerX) / scale).toInt()
+            var relativeZ = 64 + ((region.center.blockZ - mapView.centerZ) / scale).toInt()
+            if (relativeX in 0..127 && relativeZ in 0..127) {
+                relativeX = (relativeX * 2) - 128
+                // 6 빼는건 일종의 보정
+                relativeZ = max((relativeZ * 2) - 128 - 6, -128)
+                val cursor = MapCursor(
+                    relativeX.toByte(),
+                    relativeZ.toByte(),
+                    0,
+                    MapCursor.Type.BLUE_POINTER,
+                    true,
+                    text(region.displayName).color(region.gameWeather.color)
+                )
 
-                    mapCanvas.cursors.addCursor(cursor)
-                }
+                mapCanvas.cursors.addCursor(cursor)
             }
         }
     }

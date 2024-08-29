@@ -8,6 +8,7 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.Chest
+import org.bukkit.entity.BlockDisplay
 import org.bukkit.entity.Display
 import org.bukkit.entity.TextDisplay
 import org.bukkit.inventory.ItemStack
@@ -24,7 +25,7 @@ enum class ChestType(val rating: String, val color: TextColor, val material: Mat
     EPIC("에픽", NamedTextColor.DARK_PURPLE, Material.PURPLE_STAINED_GLASS)
 }
 
-data class RoyalChest(val game: Game, val chestData: ChestData, val table: ChestLootTable) {
+data class RoyalChest(val game: Game, val chestData: ChestData, val table: ChestLootTable, var beam: BlockDisplay? = null) {
 
     var isOpened: Boolean
     private val entity: TextDisplay
@@ -61,9 +62,18 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
         (location.block.state as Chest).inventory.contents = items
     }
 
+    private fun removeBeam() {
+        beam?.run {
+            if (isValid) remove()
+            game.entities.remove(this)
+            beam = null
+        }
+    }
+
     fun open() {
         if (isOpened) return
         isOpened = true
+        removeBeam()
     }
 
     fun update() {
@@ -83,6 +93,7 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
         }
         game.chests.remove(this)
         entity.remove()
+        removeBeam()
     }
 }
 
