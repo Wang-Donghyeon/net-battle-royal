@@ -54,7 +54,8 @@ class NetBattleRoyal : JavaPlugin() {
 
     override fun onDisable() {
         ticker.cancelAll()
-        games.forEach { it.remove() }
+        val willRemovedGames = games.toList()
+        willRemovedGames.forEach { it.remove() }
         Recipe.values().forEach { it.removeFromServer() }
         server.scheduler.cancelTasks(this)
     }

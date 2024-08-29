@@ -1,7 +1,6 @@
 package io.github.anblusis.netBattleRoyal.data
 
 import io.github.anblusis.netBattleRoyal.game.Game
-import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import net.kyori.adventure.text.Component.text
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
@@ -12,7 +11,6 @@ import org.bukkit.entity.BlockDisplay
 import org.bukkit.entity.Display
 import org.bukkit.entity.TextDisplay
 import org.bukkit.inventory.ItemStack
-import org.bukkit.util.Transformation
 import kotlin.math.ln
 import kotlin.math.min
 import kotlin.random.Random
@@ -25,7 +23,7 @@ enum class ChestType(val rating: String, val color: TextColor, val material: Mat
     EPIC("에픽", NamedTextColor.DARK_PURPLE, Material.PURPLE_STAINED_GLASS)
 }
 
-data class RoyalChest(val game: Game, val chestData: ChestData, val table: ChestLootTable, var beam: BlockDisplay? = null) {
+data class RoyalChest(val game: Game, val chestData: ChestData, val table: ChestLootTable, var beams: List<BlockDisplay>? = null) {
 
     var isOpened: Boolean
     private val entity: TextDisplay
@@ -51,6 +49,7 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
             text(text("${chestData.type.rating} 상자").color(chestData.type.color))
             billboard = Display.Billboard.CENTER
             viewRange = 0.1f
+            isSeeThrough = true
         }
         isOpened = false
 
@@ -62,18 +61,18 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
         (location.block.state as Chest).inventory.contents = items
     }
 
-    private fun removeBeam() {
-        beam?.run {
-            if (isValid) remove()
-            game.entities.remove(this)
-            beam = null
+    private fun removeBeams() {
+        beams?.forEach { beam ->
+            if (beam.isValid) beam.remove()
+            game.entities.remove(beam)
         }
+        beams = null
     }
 
     fun open() {
         if (isOpened) return
         isOpened = true
-        removeBeam()
+        removeBeams()
     }
 
     fun update() {
@@ -93,7 +92,7 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
         }
         game.chests.remove(this)
         entity.remove()
-        removeBeam()
+        removeBeams()
     }
 }
 

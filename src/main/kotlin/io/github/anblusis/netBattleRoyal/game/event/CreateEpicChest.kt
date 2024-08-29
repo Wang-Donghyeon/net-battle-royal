@@ -13,15 +13,12 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.Block
 import org.bukkit.entity.BlockDisplay
-import org.bukkit.util.Transformation
-import org.joml.AxisAngle4f
+import org.bukkit.entity.Display
+import org.bukkit.util.Vector
 import org.joml.Matrix4f
-import org.joml.Quaternionf
-import org.joml.Vector3f
 import java.time.Duration
 import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 class CreateEpicChest(
@@ -56,66 +53,43 @@ class CreateEpicChest(
             displays.add(this)
         }
 
-        // 낙하산 천 부분 구현 (구의 일부분을 자른 형태)
-        val radius = 2.5 // 구의 반지름
-        val segments = 8 // 천의 곡선 부분을 표현하기 위한 분할 수
-        val heightSegments = 4 // 천의 높이 방향으로의 분할 수
-        val maxAngle = Math.PI / 4 // 구의 절단 각도 (구의 1/4 부분)
+        val radius = 2.5
+        val height = 3
 
-        for (ySegment in 0 until heightSegments) {
-            val yAngle = maxAngle * ySegment / heightSegments
-            val currentRadius = radius * cos(yAngle)
-            val yOffset = radius * sin(yAngle) + 1.0 // 상자 위로 올리기
+        world.spawn(spawnLocation.clone().apply {
+            x -= (radius - 1) / 2
+            y += height
+            z -= (radius - 1) / 2
+        }, BlockDisplay::class.java).apply {
+            block = Material.WHITE_WOOL.createBlockData()
 
-            for (i in 0 until segments) {
-                val angle = Math.PI * 2 / segments * i
-                val xOffset = currentRadius * cos(angle)
-                val zOffset = currentRadius * sin(angle)
+            val matrix = Matrix4f()
+                .scale(radius.toFloat(), 1.25f, radius.toFloat()) // 열기구 모양의 반구 크기 조정
 
-                world.spawn(spawnLocation.clone().apply {
-                    x += xOffset
-                    y += yOffset
-                    z += zOffset
-                }, BlockDisplay::class.java).apply {
-                    block = Material.WHITE_WOOL.createBlockData()
-                    // 회전을 적용하여 구의 일부처럼 보이도록 변환
-                    val matrix = Matrix4f()
-                        .rotateY(angle.toFloat())
-                        .rotateX(-yAngle.toFloat())
-                        .scale(1.5f, 0.1f, 1.5f)
-                    setTransformationMatrix(matrix)
-                    displays.add(this)
-                }
-            }
+            setTransformationMatrix(matrix)
+            displays.add(this)
         }
 
-        val cordLength = radius * sin(maxAngle) + 0.5
-        // 끈 모형 구현 (참나무 목재로 동서남북 연결)
         val directions = arrayOf(
-            Pair(1.0, 0.0),   // 동
-            Pair(-1.0, 0.0),  // 서
-            Pair(0.0, 1.0),   // 남
-            Pair(0.0, -1.0)   // 북
+            Vector(1.0, 0.0, 1.0),
+            Vector(-1.0, 0.0, -1.0),
+            Vector(-1.0, 0.0, 1.0),
+            Vector(1.0, 0.0, -1.0)
         )
 
-        directions.forEach { (dx, dz) ->
-            world.spawn(spawnLocation.clone().apply {
-                x += dx * 0.5
-                y += 0.5
-                z += dz * 0.5
-            }, BlockDisplay::class.java).apply {
+        val cordScale = 0.3
+
+        directions.forEach { direction ->
+            val cordLocation = spawnLocation.clone().toCenterLocation().apply {
+                x += (direction.x * 0.75) - (0.3 * cordScale / 2)
+                y += 0.75
+                z += (direction.z * 0.75) - (0.3 * cordScale / 2)
+            }
+            world.spawn(cordLocation, BlockDisplay::class.java).apply {
                 block = Material.OAK_FENCE.createBlockData()
 
-                val targetX = dx * radius
-                val targetY = radius * sin(maxAngle) + 1.0
-                val targetZ = dz * radius
-
-                // 끈의 회전을 설정 (천의 끝과 상자 모서리를 연결)
                 val matrix = Matrix4f()
-                    .translate(0f, cordLength.toFloat(), 0f)
-                    .rotateX(atan2(targetY, cordLength).toFloat())
-                    .rotateZ(atan2(targetZ, targetX).toFloat())
-                    .scale(0.1f, cordLength.toFloat(), 0.1f)
+                    .scale(cordScale.toFloat(), (height - 0.75).toFloat(), cordScale.toFloat()) // 끈의 스케일 조정
 
                 setTransformationMatrix(matrix)
                 displays.add(this)
@@ -132,14 +106,31 @@ class CreateEpicChest(
             displays.add(this)
         }
 
-        val endRodDisplay = world.spawn(spawnLocation.clone().apply {
-            x -= 0.5
+        val beamDisplays = mutableListOf<BlockDisplay>()
+
+        world.spawn(spawnLocation.clone().apply {
+            x += 0.5 - (0.3 / 2) // 크기 (0.3f)의 2 나눈 값을 더함
             y = world.getHighestBlockAt(spawnLocation).y.toDouble()
-            z -= 0.5
+            z += 0.5 - (0.3 / 2) // 크기 (0.3f)의 2 나눈 값을 더함
         }, BlockDisplay::class.java).apply {
-            block = Material.END_ROD.createBlockData()
-            setTransformationMatrix(Matrix4f().scale(2f, (world.maxHeight - world.minHeight).toFloat(), 2f))
+            block = Material.WHITE_CONCRETE.createBlockData()
+            setTransformationMatrix(Matrix4f().scale(0.3f, (world.maxHeight - world.minHeight).toFloat(), 0.3f))
+            viewRange = 10f
+            brightness = Display.Brightness(15, 0)
             game.entities.add(this)
+            beamDisplays.add(this)
+        }
+        world.spawn(spawnLocation.clone().apply {
+            x += 0.5 - (0.5 / 2) // 크기 (0.5f)의 2 나눈 값을 더함
+            y = world.getHighestBlockAt(spawnLocation).y.toDouble()
+            z += 0.5 - (0.5 / 2) // 크기 (0.5f)의 2 나눈 값을 더함
+        }, BlockDisplay::class.java).apply {
+            block = Material.WHITE_STAINED_GLASS.createBlockData()
+            setTransformationMatrix(Matrix4f().scale(0.5f, (world.maxHeight - world.minHeight).toFloat(), 0.5f))
+            viewRange = 10f
+            brightness = Display.Brightness(15, 0)
+            game.entities.add(this)
+            beamDisplays.add(this)
         }
 
         displays.forEach {
@@ -148,7 +139,7 @@ class CreateEpicChest(
 
         lateinit var belowBlock: Block
         lateinit var task: TickerTask
-        var tick = 0
+        var rotationAngle = 0f
 
         task = plugin.ticker.runTaskTimer({
             belowBlock = blockDisplay.location.clone().subtract(0.0, 0.1, 0.0).block
@@ -169,34 +160,27 @@ class CreateEpicChest(
                     Material.GLASS.createBlockData()
                 )
                 task.cancel()
-                createChest(blockDisplay.location, endRodDisplay)
+                createChest(blockDisplay.location, beamDisplays)
                 return@runTaskTimer
             }
             displays.forEach {
                 it.teleport(it.location.add(0.0, -0.5, 0.0))
             }
-            endRodDisplay.teleport(endRodDisplay.location.apply {
-                y = world.getHighestBlockAt(spawnLocation).y.toDouble()
-            })
 
-            tick ++
+            rotationAngle += 0.1f
 
-            // 만약 이 구문 정상작동 하면 틱 빼기
-            if (endRodDisplay.interpolationDuration == 0) { 
-                tick = 0 
-                val scale = endRodDisplay.transformation.scale
-                endRodDisplay.setTransformationMatrix(
-                    Matrix4f().scale(scale).rotateY(Math.PI.toFloat() + 0.1f /* 보정 */)
-                )
-                endRodDisplay.interpolationDelay = 0
-                endRodDisplay.interpolationDuration = 100
+            beamDisplays.forEach { beamDisplay ->
+                beamDisplay.teleport(beamDisplay.location.apply {
+                    y = world.getHighestBlockAt(spawnLocation).y.toDouble() + 0.01
+                })
             }
+
         }, 0L, 1L)
     }
 
-    private fun createChest(location: Location, beam: BlockDisplay) {
+    private fun createChest(location: Location, beams: List<BlockDisplay>) {
         game.run {
-            val chest = RoyalChest(this, ChestData(location.toBlockLocation(), ChestType.EPIC), chestTables.getValue(ChestType.EPIC), beam)
+            val chest = RoyalChest(this, ChestData(location.toBlockLocation(), ChestType.EPIC), chestTables.getValue(ChestType.EPIC), beams)
             chests.add(chest)
             chestRegionCount[chest.region] = (chestRegionCount[chest.region] ?: 0) + 1
         }

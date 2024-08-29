@@ -3,6 +3,7 @@ package io.github.anblusis.netBattleRoyal.data
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
 import net.kyori.adventure.text.Component.text
+import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.*
@@ -112,14 +113,26 @@ object RegionRenderer : MapRenderer() {
                 relativeX = (relativeX * 2) - 128
                 // 6 빼는건 일종의 보정
                 relativeZ = max((relativeZ * 2) - 128 - 6, -128)
-                val cursor = MapCursor(
-                    relativeX.toByte(),
-                    relativeZ.toByte(),
-                    0,
-                    MapCursor.Type.BLUE_POINTER,
-                    true,
-                    text(region.displayName).color(region.gameWeather.color)
-                )
+
+                val cursor =
+                    if (game.isInWorldBorder(region.center, false)) {
+                        MapCursor(
+                            relativeX.toByte(),
+                            relativeZ.toByte(),
+                            0,
+                            MapCursor.Type.BLUE_POINTER,
+                            true,
+                            text(region.displayName).color(region.gameWeather.color)
+                        )
+                    } else {
+                        MapCursor(
+                            relativeX.toByte(),
+                            relativeZ.toByte(),
+                            0,
+                            MapCursor.Type.RED_POINTER,
+                            true
+                        )
+                    }
 
                 mapCanvas.cursors.addCursor(cursor)
             }
