@@ -20,19 +20,19 @@ import kotlin.math.abs
 class Game(
     worldName: String,
     val mode: Int,
-    val players: MutableList<Player>
+    players: MutableList<Player>
 ) {
     internal lateinit var chests: MutableList<RoyalChest>
     internal lateinit var regions: List<Region>
     internal lateinit var world: World
     internal lateinit var center: Location
     internal lateinit var chestTables: HashMap<ChestType, ChestLootTable>
-    internal lateinit var mapImage: BufferedImage
     internal lateinit var worldBorder: WorldBorder
     internal lateinit var state: GameState
     internal lateinit var mapColors: List<Byte>
     internal lateinit var targetWorldBorderCenter: Location
     internal lateinit var worldDefaultWeather: GameWeather
+    internal lateinit var customRecipes: List<CustomRecipe>
     private lateinit var chestLocations: List<ChestData>
     private val tickTask: TickerTask
     internal val mainInv: InvFrame
@@ -45,6 +45,7 @@ class Game(
     internal val tasks: MutableList<GameTask> = mutableListOf()
     internal val maps: MutableList<BattleRoyalMap> = mutableListOf()
     internal val entities: MutableList<Entity> = mutableListOf()
+    internal val marmottes: MutableList<Marmotte> = mutableListOf()
 
     val worldBorderCenter
         get() = worldBorder.center
@@ -54,7 +55,7 @@ class Game(
 
     init {
         registerGame(worldName)
-        registerPlayers(players)
+        registerMarmotte(players)
         registerEvent()
 
         setChests()
@@ -65,8 +66,8 @@ class Game(
 
     private fun onTick() {
         chests.forEach { it.update() }
-        players.forEach {
-            getMarmotte(it).update()
+        marmottes.forEach {
+            it.update()
         }
         val timedOutTasks = mutableListOf<GameTask>()
         tasks.forEach { task ->
@@ -124,8 +125,8 @@ class Game(
                 chestLocations = City.getChestLocations()
                 regions = City.getRegions()
                 chestTables = City.getChestTables()
-                mapImage = City.getMapImage()
                 mapColors = City.getMapColors()
+                customRecipes = City.getCustomRecipes()
             }
         }
 
@@ -138,9 +139,10 @@ class Game(
         targetWorldBorderSize = worldBorderSize
     }
 
-    private fun registerPlayers(players: MutableList<Player>) {
+    private fun registerMarmotte(players: MutableList<Player>) {
         players.forEach { player ->
-            getMarmotte(player).joinGame(this)
+            val marmotte = DataManager.addMarmotte(player, this)
+            marmottes.add(marmotte)
         }
     }
 
@@ -171,8 +173,8 @@ class Game(
         }
         val willRemovedChests = chests.toList()
         willRemovedChests.forEach { it.remove() }
-        val willRemovedPlayers = players.toList()
-        willRemovedPlayers.forEach { getMarmotte(it).leaveGame() }
+        val willRemovedMarmottes = marmottes.toList()
+        willRemovedMarmottes.forEach { it.remove() }
         plugin.games.remove(this)
     }
 }

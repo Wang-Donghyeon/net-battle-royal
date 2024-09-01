@@ -41,7 +41,7 @@ data class BattleRoyalMap(private val game: Game, private val hasRender: Boolean
 
 object ImageMapRenderer : MapRenderer() {
     override fun render(mapView: MapView, mapCanvas: MapCanvas, player: Player) {
-        val game = DataManager.getMarmotte(player).game ?: return
+        val game = DataManager.getMarmotte(player)?.game ?: return
 
         game.mapColors.forEachIndexed { index, color ->
             val x = index % 128
@@ -55,7 +55,7 @@ object ImageMapRenderer : MapRenderer() {
 object WorldBorderRenderer : MapRenderer() {
     override fun render(mapView: MapView, mapCanvas: MapCanvas, player: Player) {
 
-        val game = DataManager.getMarmotte(player).game ?: return
+        val game = DataManager.getMarmotte(player)?.game ?: return
         val centerX = mapView.centerX
         val centerZ = mapView.centerZ
         val size = (game.worldBorderSize / 2).toInt()
@@ -102,7 +102,7 @@ object WorldBorderRenderer : MapRenderer() {
 
 object RegionRenderer : MapRenderer() {
     override fun render(mapView: MapView, mapCanvas: MapCanvas, player: Player) {
-        val game = DataManager.getMarmotte(player).game ?: return
+        val game = DataManager.getMarmotte(player)?.game ?: return
 
         mapCanvas.cursors = MapCursorCollection()
         val scale = (2.0).pow(mapView.scale.value.toDouble())

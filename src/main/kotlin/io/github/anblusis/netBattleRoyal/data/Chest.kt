@@ -49,7 +49,7 @@ data class RoyalChest(val game: Game, val chestData: ChestData, val table: Chest
             text(text("${chestData.type.rating} 상자").color(chestData.type.color))
             billboard = Display.Billboard.CENTER
             viewRange = 0.1f
-            isSeeThrough = true
+            if (chestData.type == ChestType.EPIC) isSeeThrough = true
         }
         isOpened = false
 

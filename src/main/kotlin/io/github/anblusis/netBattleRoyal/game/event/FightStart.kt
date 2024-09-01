@@ -15,15 +15,17 @@ class FightStart(
     private val tick: Int
 ): Runnable {
     init {
-        game.players.forEach {
-            it.addPotionEffect(PotionEffect(PotionEffectType.SPEED, tick, 1, false, false))
+        game.marmottes.forEach {
+            val player = it.player
+            player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, tick, 1, false, false))
         }
     }
 
     override fun run() {
         game.state = GameState.PLAYING
-        game.players.forEach {
-            it.showTitle(
+        game.marmottes.forEach {
+            val player = it.player
+            player.showTitle(
                 Title.title(
                     text(""),
                     text("무적이 해제됩니다.").color(NamedTextColor.AQUA),

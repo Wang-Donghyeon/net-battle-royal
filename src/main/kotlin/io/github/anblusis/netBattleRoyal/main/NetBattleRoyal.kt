@@ -2,7 +2,6 @@ package io.github.anblusis.netBattleRoyal.main
 
 import io.github.anblusis.netBattleRoyal.command.CommandManager
 import io.github.anblusis.netBattleRoyal.data.*
-import io.github.anblusis.netBattleRoyal.data.DataManager.addMarmotte
 import io.github.anblusis.netBattleRoyal.event.EventManager
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.monun.kommand.kommand
@@ -26,22 +25,14 @@ class NetBattleRoyal : JavaPlugin() {
 
     override fun onEnable() {
         EventManager.register()
-        DataManager.register()
-        registerPlayer()
         registerRecipe()
         registerCommand()
 
         server.scheduler.runTaskTimer(this, ticker, 0L, 1L)
     }
 
-    private fun registerPlayer() {
-        server.onlinePlayers.forEach {
-            addMarmotte(it)
-        }
-    }
-
     private fun registerRecipe() {
-        Recipe.values().forEach {
+        CustomRecipe.values().forEach {
             it.addToServer()
         }
     }
@@ -56,7 +47,7 @@ class NetBattleRoyal : JavaPlugin() {
         ticker.cancelAll()
         val willRemovedGames = games.toList()
         willRemovedGames.forEach { it.remove() }
-        Recipe.values().forEach { it.removeFromServer() }
+        CustomRecipe.values().forEach { it.removeFromServer() }
         server.scheduler.cancelTasks(this)
     }
 }

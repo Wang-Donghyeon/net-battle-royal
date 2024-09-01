@@ -9,11 +9,11 @@ import org.bukkit.event.player.PlayerQuitEvent
 
 fun playerOpenChest(listener: EventManager, event: InventoryOpenEvent) : EventResult {
     val marmotte = DataManager.getMarmotte(event.player as Player)
-    marmotte.game?.chests?.forEach {
+    marmotte?.game?.chests?.forEach {
         if (it.location == (event.inventory.holder as Chest).location) {
             it.open()
             return EventResult.OPEN_ROYALE_CHEST
         }
     }
-    return EventResult.OPEN_CHEST
+    return EventResult.FAIL
 }

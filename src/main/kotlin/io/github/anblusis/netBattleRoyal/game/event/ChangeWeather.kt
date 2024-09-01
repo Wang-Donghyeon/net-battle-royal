@@ -17,9 +17,10 @@ class ChangeWeather(
             region.gameWeather = GameWeather.values().filter { it != region.gameWeather }.random()
         }
 
-        game.players.filter { DataManager.getMarmotte(it).region in regions }.forEach {
-            val region = DataManager.getMarmotte(it).region!!
-            it.showTitle(
+        game.marmottes.filter { it.region in regions }.forEach {
+            val region = it.region!!
+            val player = it.player
+            player.showTitle(
                 Title.title(
                     text(""),
                     text("날씨가 ${region.gameWeather.displayName} 상태로 변화했습니다.").color(NamedTextColor.GOLD),

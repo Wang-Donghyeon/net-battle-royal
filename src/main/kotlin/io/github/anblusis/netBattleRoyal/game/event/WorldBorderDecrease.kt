@@ -27,8 +27,9 @@ class WorldBorderDecrease(
         game.targetWorldBorderCenter = center.clone()
         game.targetWorldBorderSize = size
 
-        game.players.forEach {
-            it.showTitle(
+        game.marmottes.forEach {
+            val player = it.player
+            player.showTitle(
                 Title.title(
                     text(""),
                     text("월드보더가 ${tick / 20}초에 걸쳐 변화합니다.").color(NamedTextColor.AQUA),
@@ -39,12 +40,12 @@ class WorldBorderDecrease(
                     )
                 )
             )
-            it.sendMessage(
+            player.sendMessage(
                 text("중심 위치: ")
                     .append(text("${center.blockX}, ${center.blockZ} ").color(NamedTextColor.GREEN))
                         .append(text("(처음에서 ${center.distance(game.worldBorderCenter).toInt()} 블록 거리)"))
             )
-            it.sendMessage(
+            player.sendMessage(
                 text("경계 크기: ")
                     .append(text("${size.toInt()} ").color(NamedTextColor.GREEN))
                         .append(text("(처음에서 ${sizeDecrease.toInt()} 블록 감소)"))

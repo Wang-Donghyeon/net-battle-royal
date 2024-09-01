@@ -13,6 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.event.inventory.PrepareItemCraftEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -29,9 +30,6 @@ object EventManager : Listener {
     }
 
     @EventHandler
-    private fun onPlayerJoin(event: PlayerJoinEvent) { playerJoin(this, event) }
-
-    @EventHandler
     private fun onPlayerQuit(event: PlayerQuitEvent) { playerQuit(this, event) }
 
     @EventHandler
@@ -46,17 +44,13 @@ object EventManager : Listener {
     }
 
     @EventHandler
-    private fun onWorldBorderBoundsChange(event: WorldBorderBoundsChangeEvent) {
-        worldBorderChange(this, event)
-    }
-
-    @EventHandler
-    private fun onWorldBorderCenterChange(event: WorldBorderCenterChangeEvent) {
-        worldBorderChange(this, event)
-    }
-
-    @EventHandler
     private fun onPlayerDamaged(event: EntityDamageEvent) {
         if (event.entity is Player) playerDamaged(this, event)
+    }
+
+    @EventHandler
+    private fun onPlayerPrepareCrafting(event: PrepareItemCraftEvent) {
+        if (event.view.player !is Player) return
+        playerPrepareCrafting(this, event)
     }
 }

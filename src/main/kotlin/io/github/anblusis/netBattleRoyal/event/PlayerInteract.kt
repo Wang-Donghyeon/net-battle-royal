@@ -14,12 +14,14 @@ fun playerInteract(listener: EventManager, event: PlayerInteractEvent) : EventRe
             event.isCancelled = true
 
             val block = event.clickedBlock
-            if (plugin.debugChestData.find { it.location == block!!.location } != null) {
-                event.player.sendMessage("해당 위치엔 상자가 이미 존재합니다.")
-                return EventResult.FAIL
+            val selecting = plugin.debugChestData.find { it.location == block!!.location }
+            if (selecting != null) {
+                event.player.sendMessage("해당 위치의 상자를 제거했습니다.")
+                plugin.debugChestData.remove(selecting)
+            } else {
+                plugin.debugChestData.add(ChestData(block!!.location, ChestType.NORMAL))
+                event.player.sendMessage("블록 위치가 ${block.location.toVector()} 위치에 저장되었습니다!")
             }
-            plugin.debugChestData.add(ChestData(block!!.location, ChestType.NORMAL))
-            event.player.sendMessage("블록 위치가 ${block.location.toVector()} 위치에 저장되었습니다!")
         }
         Action.LEFT_CLICK_BLOCK -> {
             event.isCancelled = true

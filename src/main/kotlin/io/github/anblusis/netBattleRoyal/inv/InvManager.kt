@@ -1,7 +1,7 @@
 package io.github.anblusis.netBattleRoyal.inv
 
 import io.github.anblusis.netBattleRoyal.data.ChestType
-import io.github.anblusis.netBattleRoyal.data.Recipe
+import io.github.anblusis.netBattleRoyal.data.CustomRecipe
 import io.github.anblusis.netBattleRoyal.data.Region
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.monun.invfx.InvFX
@@ -89,38 +89,44 @@ object InvManager {
         }
     }
 
-    private fun createRecipeInv(game: Game, clickedRecipe: Recipe? = null): InvFrame = InvFX.frame(5, text("조합법").decorate(TextDecoration.BOLD)) {
-        list(0, 0, if (clickedRecipe == null) 8 else 3, 3, true, { Recipe.values().toList() }) {
+    private fun createRecipeInv(game: Game, clickedCustomRecipe: CustomRecipe? = null): InvFrame = InvFX.frame(5, text("조합법").decorate(TextDecoration.BOLD)) {
+        list(0, 0, if (clickedCustomRecipe == null) 8 else 3, 3, true, { game.customRecipes }) {
             transform {
-                if (it == clickedRecipe) it.result.clone().apply {
+                if (it == clickedCustomRecipe) it.result.clone().apply {
                     addUnsafeEnchantment(Enchantment.DURABILITY, 1)
                     addItemFlags(ItemFlag.HIDE_ENCHANTS)
                 } else it.result
             }
             onClickItem { _, _, (recipe, _), event ->
                 (event.whoClicked as Player).playSound(event.whoClicked.location, Sound.UI_BUTTON_CLICK, 1f, 1f)
-                if (clickedRecipe == recipe) {
+                if (clickedCustomRecipe == recipe) {
                     (event.whoClicked as Player).openFrame(createRecipeInv(game))
                 } else {
                     (event.whoClicked as Player).openFrame(createRecipeInv(game, recipe))
                 }
             }
         }.let { list ->
-            slot(if (clickedRecipe == null) 3 else 0, 4) {
+            if (clickedCustomRecipe != null) {
+                while(clickedCustomRecipe !in list.displays.map { it.first }) {
+                    list.index++
+                }
+            }
+
+            slot(if (clickedCustomRecipe == null) 3 else 0, 4) {
                 item = previousPageItem
                 onClick { event ->
                     (event.whoClicked as Player).playSound(event.whoClicked.location, Sound.UI_BUTTON_CLICK, 1f, 1f)
                     list.index--
                 }
             }
-            slot(if (clickedRecipe == null) 5 else 2, 4) {
+            slot(if (clickedCustomRecipe == null) 5 else 2, 4) {
                 item = nextPageItem
                 onClick { event ->
                     (event.whoClicked as Player).playSound(event.whoClicked.location, Sound.UI_BUTTON_CLICK, 1f, 1f)
                     list.index++
                 }
             }
-            slot(if (clickedRecipe == null) 4 else 1, 4) {
+            slot(if (clickedCustomRecipe == null) 4 else 1, 4) {
                 item = returnItem
                 onClick { event ->
                     (event.whoClicked as Player).playSound(event.whoClicked.location, Sound.UI_BUTTON_CLICK, 1f, 1f)
@@ -129,9 +135,61 @@ object InvManager {
             }
         }
 
-        if (clickedRecipe != null) {
-            list(5, 1, 7, 3, true, { clickedRecipe.toMaterialShape() }) {
-                transform { ItemStack(it ?: Material.AIR) }
+        if (clickedCustomRecipe != null) {
+            list(5, 1, 7, 3, true, { clickedCustomRecipe.toItemShape() }) {
+                transform {
+                    val explain = mutableListOf<Component>()
+                    if (it in CustomRecipe.values().map { recipe -> recipe.result }) {
+                        explain.add(text("").decoration(TextDecoration.ITALIC, false))
+                        explain.add(text("조합 아이템").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GOLD))
+                        explain.add(text(" - 클릭하여 조합법 확인").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY))
+                    } else {
+                        explain.add(text("").decoration(TextDecoration.ITALIC, false))
+                        explain.add(text("상자 아이템").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GOLD))
+
+                        var haveRegion = false
+
+                        game.chestTables.forEach { (type, table) ->
+                            val loot = table.loots.find { loot -> loot.item == it }
+                            loot?.run {
+                                haveRegion = true
+                                if (regions.isEmpty()) {
+                                    explain.add(
+                                        text(" - ${type.rating} 상자 (모든 지역)").decoration(
+                                            TextDecoration.ITALIC,
+                                            false
+                                        ).color(NamedTextColor.GRAY)
+                                    )
+                                } else {
+                                    val regions = regions.mapNotNull { name -> game.regions.find { region -> region.name == name } }
+                                    regions.forEach { region ->
+                                        explain.add(
+                                            text(" - ${type.rating} 상자 (${region.displayName})").decoration(
+                                                TextDecoration.ITALIC,
+                                                false
+                                            ).color(NamedTextColor.GRAY)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!haveRegion) {
+                            explain.clear()
+                        }
+                    }
+                    it?.clone()?.apply {
+                        itemMeta = itemMeta.apply {
+                            lore(lore()?.plus(explain) ?: explain)
+                        }
+                    } ?: ItemStack(Material.AIR)
+                }
+                onClickItem { _, _, (item, _), event ->
+                    if (item in CustomRecipe.values().map { recipe -> recipe.result }) {
+                        (event.whoClicked as Player).playSound(event.whoClicked.location, Sound.UI_BUTTON_CLICK, 1f, 1f)
+                        (event.whoClicked as Player).openFrame(createRecipeInv(game, CustomRecipe.values().find { recipe -> recipe.result == item }))
+                    }
+                }
             }
 
             pane(4, 0, 4, 4) {
@@ -200,6 +258,8 @@ object InvManager {
             transform {
                 it.item
             }
+
+            // todo: '쓰임처' 만들기
         }.let { list ->
             slot(4, 4) {
                 item = previousPageItem
@@ -265,13 +325,14 @@ object InvManager {
 
     private fun createItemInv(game: Game): InvFrame = InvFX.frame(5, text("아이템 목록").decorate(TextDecoration.BOLD)) {
         list(0, 0, 8, 3, true, {
-            Recipe.values().map { it.result }.plus(game.chestTables.values.map { table -> table.loots.map { loot -> loot.item } }.flatten())
+            CustomRecipe.values().map { it.result }.plus(game.chestTables.values.map { table -> table.loots.map { loot -> loot.item } }.flatten())
         }) {
             transform {
                 val explain = mutableListOf<Component>()
-                if (it in Recipe.values().map { recipe -> recipe.result }) {
+                if (it in CustomRecipe.values().map { recipe -> recipe.result }) {
                     explain.add(text("").decoration(TextDecoration.ITALIC, false))
                     explain.add(text("조합 아이템").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GOLD))
+                    explain.add(text(" - 클릭하여 조합법 확인").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY))
                 } else {
                     explain.add(text("").decoration(TextDecoration.ITALIC, false))
                     explain.add(text("상자 아이템").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GOLD))
@@ -304,6 +365,13 @@ object InvManager {
                     itemMeta = itemMeta.apply {
                         lore(lore()?.plus(explain) ?: explain)
                     }
+                }
+            }
+
+            onClickItem { _, _, (item, _), event ->
+                if (item in CustomRecipe.values().map { recipe -> recipe.result }) {
+                    (event.whoClicked as Player).playSound(event.whoClicked.location, Sound.UI_BUTTON_CLICK, 1f, 1f)
+                    (event.whoClicked as Player).openFrame(createRecipeInv(game, CustomRecipe.values().find { recipe -> recipe.result == item }))
                 }
             }
         }.let { list ->

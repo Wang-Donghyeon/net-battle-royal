@@ -27,393 +27,564 @@ object City : WorldData {
 
     override fun getChestLocations(): List<ChestData> =
         listOf(
-            // 대저택
             ChestData(
-                Location(world, -150.0, 29.0, 740.0),
-                ChestType.RARE
+            Location(world, -334.0, 46.0, 791.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -150.0, 32.0, 716.0),
-                ChestType.RARE
+            Location(world, -421.0, 25.0, 765.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -177.0, 30.0, 733.0),
-                ChestType.RARE
+            Location(world, -126.0, 22.0, 763.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -123.0, 30.0, 733.0),
-                ChestType.RARE
+            Location(world, -167.0, 30.0, 729.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -127.0, 39.0, 704.0),
-                ChestType.RARE
+            Location(world, -352.0, 58.0, 695.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -173.0, 39.0, 704.0),
-                ChestType.RARE
+            Location(world, -150.0, 32.0, 716.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -181.0, 22.0, 743.0),
-                ChestType.RARE
+            Location(world, -437.0, 21.0, 651.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -173.0, 22.0, 752.0),
-                ChestType.NORMAL
+            Location(world, -150.0, 22.0, 735.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -173.0, 22.0, 750.0),
-                ChestType.NORMAL
+            Location(world, -327.0, 21.0, 741.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -150.0, 22.0, 735.0),
-                ChestType.NORMAL
+            Location(world, -324.0, 46.0, 743.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -150.0, 22.0, 745.0),
-                ChestType.NORMAL
+            Location(world, -379.0, 18.0, 747.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -115.0, 22.0, 748.0),
-                ChestType.NORMAL
+            Location(world, -340.0, 20.0, 808.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -126.0, 22.0, 763.0),
-                ChestType.NORMAL
+            Location(world, -416.0, 29.0, 720.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -157.0, 22.0, 757.0),
-                ChestType.NORMAL
+            Location(world, -131.0, 22.0, 735.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -166.0, 22.0, 763.0),
-                ChestType.NORMAL
+            Location(world, -160.0, 35.0, 714.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -169.0, 22.0, 735.0),
-                ChestType.NORMAL
+            Location(world, -150.0, 29.0, 740.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -131.0, 22.0, 735.0),
-                ChestType.NORMAL
+            Location(world, -177.0, 37.0, 729.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -150.0, 22.0, 721.0),
-                ChestType.NORMAL
+            Location(world, -373.0, 28.0, 807.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -119.0, 22.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -140.0, 35.0, 714.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -181.0, 22.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -400.0, 18.0, 824.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -168.0, 24.0, 730.0),
-                ChestType.NORMAL
+            Location(world, -322.0, 28.0, 751.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -181.0, 22.0, 704.0),
-                ChestType.NORMAL
+            Location(world, -410.0, 18.0, 774.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -119.0, 22.0, 704.0),
-                ChestType.NORMAL
+            Location(world, -119.0, 30.0, 704.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -132.0, 24.0, 730.0),
-                ChestType.NORMAL
+            Location(world, -319.0, 29.0, 783.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -159.0, 31.0, 715.0),
-                ChestType.NORMAL
+            Location(world, -177.0, 30.0, 733.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -141.0, 31.0, 715.0),
-                ChestType.NORMAL
+            Location(world, -402.0, 18.0, 724.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -133.0, 30.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -434.0, 22.0, 787.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -167.0, 30.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -181.0, 30.0, 704.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -181.0, 30.0, 704.0),
-                ChestType.NORMAL
+            Location(world, -357.0, 21.0, 799.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -119.0, 30.0, 704.0),
-                ChestType.NORMAL
+            Location(world, -326.0, 20.0, 798.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -134.0, 37.0, 708.0),
-                ChestType.NORMAL
+            Location(world, -173.0, 39.0, 704.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -166.0, 37.0, 708.0),
-                ChestType.NORMAL
+            Location(world, -317.0, 35.0, 752.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -123.0, 37.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -168.0, 24.0, 730.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -131.0, 37.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -173.0, 22.0, 750.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -177.0, 37.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -127.0, 39.0, 704.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -169.0, 37.0, 729.0),
-                ChestType.NORMAL
+            Location(world, -181.0, 22.0, 704.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -140.0, 35.0, 714.0),
-                ChestType.NORMAL
+            Location(world, -408.0, 21.0, 716.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -160.0, 35.0, 714.0),
-                ChestType.NORMAL
+            Location(world, -430.0, 27.0, 726.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -150.0, 38.0, 712.0),
-                ChestType.NORMAL
+            Location(world, -387.0, 27.0, 694.0),
+            ChestType.NORMAL
             ),
-            // 야구장
             ChestData(
-                Location(world, -421.0, 58.0, 768.0),
-                ChestType.RARE
+            Location(world, -406.0, 26.0, 706.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -433.0, 58.0, 743.0),
-                ChestType.RARE
+            Location(world, -433.0, 58.0, 743.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -381.0, 58.0, 695.0),
-                ChestType.RARE
+            Location(world, -417.0, 18.0, 789.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -352.0, 58.0, 695.0),
-                ChestType.RARE
+            Location(world, -404.0, 21.0, 794.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -334.0, 46.0, 791.0),
-                ChestType.RARE
+            Location(world, -331.0, 30.0, 796.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -408.0, 21.0, 716.0),
-                ChestType.RARE
+            Location(world, -379.0, 18.0, 716.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -432.0, 29.0, 775.0),
-                ChestType.RARE
+            Location(world, -432.0, 29.0, 775.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -317.0, 35.0, 752.0),
-                ChestType.RARE
+            Location(world, -181.0, 22.0, 743.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -437.0, 21.0, 651.0),
-                ChestType.RARE
+            Location(world, -326.0, 29.0, 717.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -379.0, 18.0, 747.0),
-                ChestType.NORMAL
+            Location(world, -352.0, 18.0, 716.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -402.0, 18.0, 724.0),
-                ChestType.NORMAL
+            Location(world, -411.0, 18.0, 747.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -352.0, 18.0, 716.0),
-                ChestType.NORMAL
+            Location(world, -318.0, 35.0, 724.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -410.0, 18.0, 774.0),
-                ChestType.NORMAL
+            Location(world, -398.0, 26.0, 799.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -352.0, 18.0, 774.0),
-                ChestType.NORMAL
+            Location(world, -169.0, 37.0, 729.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -379.0, 18.0, 774.0),
-                ChestType.NORMAL
+            Location(world, -381.0, 58.0, 695.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -352.0, 18.0, 747.0),
-                ChestType.NORMAL
+            Location(world, -340.0, 38.0, 800.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -324.0, 46.0, 743.0),
-                ChestType.NORMAL
+            Location(world, -373.0, 46.0, 800.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -373.0, 46.0, 800.0),
-                ChestType.NORMAL
+            Location(world, -379.0, 18.0, 774.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -412.0, 42.0, 792.0),
-                ChestType.NORMAL
+            Location(world, -327.0, 21.0, 771.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -328.0, 20.0, 796.0),
-                ChestType.NORMAL
+            Location(world, -150.0, 22.0, 745.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -310.0, 21.0, 780.0),
-                ChestType.NORMAL
+            Location(world, -310.0, 21.0, 780.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -340.0, 20.0, 808.0),
-                ChestType.NORMAL
+            Location(world, -316.0, 20.0, 716.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -339.0, 24.0, 786.0),
-                ChestType.NORMAL
+            Location(world, -157.0, 22.0, 757.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -340.0, 24.0, 787.0),
-                ChestType.NORMAL
+            Location(world, -434.0, 27.0, 748.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -331.0, 30.0, 796.0),
-                ChestType.NORMAL
+            Location(world, -423.0, 22.0, 803.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -319.0, 29.0, 783.0),
-                ChestType.NORMAL
+            Location(world, -328.0, 20.0, 796.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -322.0, 28.0, 751.0),
-                ChestType.NORMAL
+            Location(world, -119.0, 22.0, 704.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -326.0, 29.0, 717.0),
-                ChestType.NORMAL
+            Location(world, -352.0, 27.0, 694.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -373.0, 28.0, 807.0),
-                ChestType.NORMAL
+            Location(world, -115.0, 22.0, 748.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -317.0, 35.0, 784.0),
-                ChestType.NORMAL
+            Location(world, -339.0, 24.0, 786.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -318.0, 35.0, 724.0),
-                ChestType.NORMAL
+            Location(world, -352.0, 18.0, 747.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -320.0, 38.0, 752.0),
-                ChestType.NORMAL
+            Location(world, -320.0, 38.0, 752.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -340.0, 38.0, 800.0),
-                ChestType.NORMAL
+            Location(world, -412.0, 42.0, 792.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -334.0, 20.0, 721.0),
-                ChestType.NORMAL
+            Location(world, -340.0, 24.0, 787.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -316.0, 20.0, 716.0),
-                ChestType.NORMAL
+            Location(world, -166.0, 22.0, 763.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -327.0, 21.0, 741.0),
-                ChestType.NORMAL
+            Location(world, -169.0, 22.0, 735.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -327.0, 21.0, 771.0),
-                ChestType.NORMAL
+            Location(world, -421.0, 58.0, 768.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -326.0, 20.0, 798.0),
-                ChestType.NORMAL
+            Location(world, -415.0, 28.0, 797.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -357.0, 21.0, 799.0),
-                ChestType.NORMAL
+            Location(world, -181.0, 22.0, 729.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -404.0, 21.0, 794.0),
-                ChestType.NORMAL
+            Location(world, -119.0, 22.0, 729.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -400.0, 18.0, 824.0),
-                ChestType.NORMAL
+            Location(world, -133.0, 30.0, 729.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -423.0, 20.0, 793.0),
-                ChestType.NORMAL
+            Location(world, -423.0, 20.0, 793.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -398.0, 26.0, 799.0),
-                ChestType.NORMAL
+            Location(world, -352.0, 18.0, 774.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -415.0, 28.0, 797.0),
-                ChestType.NORMAL
+            Location(world, -132.0, 24.0, 730.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -423.0, 22.0, 803.0),
-                ChestType.NORMAL
+            Location(world, -317.0, 35.0, 784.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -376.0, 22.0, 803.0),
-                ChestType.NORMAL
+            Location(world, -376.0, 22.0, 803.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -434.0, 22.0, 787.0),
-                ChestType.NORMAL
+            Location(world, -170.0, 22.0, 757.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -417.0, 18.0, 789.0),
-                ChestType.NORMAL
+            Location(world, -150.0, 22.0, 719.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -421.0, 25.0, 765.0),
-                ChestType.NORMAL
+            Location(world, -180.0, 37.0, 706.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -411.0, 18.0, 747.0),
-                ChestType.NORMAL
+            Location(world, -120.0, 37.0, 706.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -379.0, 18.0, 716.0),
-                ChestType.NORMAL
+            Location(world, -120.0, 37.0, 716.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -434.0, 27.0, 748.0),
-                ChestType.NORMAL
+            Location(world, -130.0, 30.0, 733.0),
+            ChestType.RARE
             ),
             ChestData(
-                Location(world, -430.0, 27.0, 726.0),
-                ChestType.NORMAL
+            Location(world, -335.0, 20.0, 712.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -416.0, 29.0, 720.0),
-                ChestType.NORMAL
+            Location(world, -335.0, 20.0, 720.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -406.0, 26.0, 706.0),
-                ChestType.NORMAL
+            Location(world, -242.0, 22.0, 945.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -387.0, 27.0, 694.0),
-                ChestType.NORMAL
+            Location(world, -242.0, 22.0, 964.0),
+            ChestType.NORMAL
             ),
             ChestData(
-                Location(world, -352.0, 27.0, 694.0),
-                ChestType.NORMAL
+            Location(world, -211.0, 22.0, 945.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -273.0, 22.0, 945.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -192.0, 22.0, 949.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -188.0, 22.0, 949.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -242.0, 26.0, 962.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -205.0, 22.0, 968.0),
+            ChestType.RARE
+            ),
+            ChestData(
+            Location(world, -242.0, 32.0, 969.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -228.0, 25.0, 991.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -229.0, 25.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -212.0, 25.0, 977.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -206.0, 25.0, 978.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -190.0, 30.0, 951.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -181.0, 28.0, 960.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -199.0, 28.0, 960.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -180.0, 28.0, 983.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -272.0, 25.0, 980.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -260.0, 25.0, 980.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -266.0, 25.0, 974.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -273.0, 25.0, 984.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -256.0, 25.0, 993.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -206.0, 19.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -206.0, 19.0, 986.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -256.0, 20.0, 982.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -263.0, 20.0, 977.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -270.0, 20.0, 982.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -256.0, 31.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -271.0, 31.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -256.0, 31.0, 989.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -232.0, 31.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -228.0, 31.0, 991.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -217.0, 31.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -213.0, 37.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -228.0, 37.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -228.0, 37.0, 991.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -239.0, 38.0, 974.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -256.0, 37.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -270.0, 37.0, 973.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -256.0, 37.0, 990.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -242.0, 54.0, 991.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -242.0, 59.0, 976.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -206.0, 49.0, 976.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -200.0, 49.0, 991.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -279.0, 50.0, 972.0),
+            ChestType.NORMAL
+            ),
+            ChestData(
+            Location(world, -279.0, 49.0, 986.0),
+            ChestType.NORMAL
             )
         )
+
 
     override fun getRegions(): List<Region> =
         listOf(
@@ -467,15 +638,6 @@ object City : WorldData {
                     )
         )
 
-    override fun getMapImage(): BufferedImage {
-        val imageStream = javaClass.getResourceAsStream("/images/cityMap.png")
-        return try {
-            ImageIO.read(imageStream)
-        } catch (e: IllegalArgumentException) {
-            BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB)
-        }
-    }
-
     override fun getMapColors(): List<Byte> {
         val data: InputStream = javaClass.getResourceAsStream("/datas/city.txt")
             ?: throw IllegalArgumentException("Resource not found: /datas/city.txt")
@@ -486,5 +648,10 @@ object City : WorldData {
             content.split(",")
                 .map { it.trim().toByte() }
         }
+    }
+
+    override fun getCustomRecipes(): List<CustomRecipe> {
+        val recipes = CustomRecipe.values().filter { it.worlds.isEmpty() || it.worlds.contains(world) }
+        return recipes
     }
 }

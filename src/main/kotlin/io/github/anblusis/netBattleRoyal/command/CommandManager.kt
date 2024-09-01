@@ -7,6 +7,7 @@ import io.github.anblusis.netBattleRoyal.data.DataManager
 import io.github.anblusis.netBattleRoyal.game.Game
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal
 import io.github.anblusis.netBattleRoyal.main.NetBattleRoyal.Companion.plugin
+import io.github.anblusis.netBattleRoyal.world.WorldData
 import io.github.monun.invfx.openFrame
 import io.github.monun.kommand.Kommand
 import io.github.monun.kommand.KommandArgument.Companion.dynamic
@@ -14,6 +15,7 @@ import io.github.monun.kommand.PluginKommand
 import io.github.monun.kommand.kommand
 import net.kyori.adventure.text.Component.text
 import org.bukkit.Particle
+import org.bukkit.World
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -80,10 +82,34 @@ object CommandManager {
                     printChestsData()
                 }
             }
-            then("spawnparticleatchestsdata") {
+            then("experesschestsdata") {
                 requires { isOp }
-                executes {
-                    spawnParticleAtChestsData()
+                then("block") {
+                    executes {
+                        expressChestsData(true)
+                    }
+                }
+                then("effect") {
+                    executes {
+                        expressChestsData(false)
+                    }
+                }
+            }
+            then("syncchestsdata") {
+                requires { isOp }
+                then("player") {
+                    then("player" to player()) {
+                        executes {
+                            synchronizeChestsData(DataManager.getMarmotte(it["player"])?.game)
+                        }
+                    }
+                }
+                then("world") {
+                    then("world" to worldArgument) {
+                        executes {
+                            synchronizeChestsData(plugin.games.find { game -> game.world == it["world"] })
+                        }
+                    }
                 }
             }
             then("createbattleroyal") {
@@ -101,7 +127,7 @@ object CommandManager {
                 then("player") {
                     then("player" to player()) {
                         executes {
-                            removeBattleRoyal(DataManager.getMarmotte(it["player"]).game)
+                            removeBattleRoyal(DataManager.getMarmotte(it["player"])?.game)
                         }
                     }
                 }
@@ -125,19 +151,19 @@ object CommandManager {
     }
 
     private fun makeBattleRoyalMap(player: Player) {
-        DataManager.getMarmotte(player).game?.let {
+        DataManager.getMarmotte(player)?.game?.let {
             player.inventory.addItem(BattleRoyalMap(it).item)
         }
     }
 
     private fun showBattleRoyalUI(player: Player) {
-        DataManager.getMarmotte(player).game?.let {
+        DataManager.getMarmotte(player)?.game?.let {
             player.openFrame(it.mainInv)
         }
     }
 
     private fun printChestsData() {
-        val codeSnippet = StringBuilder("chestLocations = listOf(\n")
+        val codeSnippet = StringBuilder("listOf(\n")
 
         plugin.debugChestData.forEach { chestData ->
             val location = chestData.location
@@ -149,7 +175,7 @@ object CommandManager {
                     Location(world, ${location.x}, ${location.y}, ${location.z}),
                     ChestType.$type
                 ),
-                """.trimIndent()
+                """
             ).append("\n")
         }
 
@@ -166,19 +192,33 @@ object CommandManager {
         game?.remove()
     }
 
-    private fun spawnParticleAtChestsData() {
+    private fun expressChestsData(makeBlock: Boolean) {
         plugin.debugChestData.forEach { chestData ->
             val location = chestData.location.clone().apply {
                 x += 0.5
                 y += 0.5
                 z += 0.5
             }
-            val dustOptions = when (chestData.type) {
-                ChestType.NORMAL -> Particle.DustOptions(org.bukkit.Color.WHITE, 5.0f)
-                ChestType.RARE -> Particle.DustOptions(org.bukkit.Color.YELLOW, 5.0f)
-                ChestType.EPIC -> Particle.DustOptions(org.bukkit.Color.PURPLE, 5.0f)
+
+            if (makeBlock) {
+                location.block.type = chestData.type.material
+            } else {
+                val dustOptions = when (chestData.type) {
+                    ChestType.NORMAL -> Particle.DustOptions(org.bukkit.Color.WHITE, 5.0f)
+                    ChestType.RARE -> Particle.DustOptions(org.bukkit.Color.GREEN, 5.0f)
+                    ChestType.EPIC -> Particle.DustOptions(org.bukkit.Color.PURPLE, 5.0f)
+                }
+                location.world.spawnParticle(Particle.REDSTONE, location, 1, 0.0, 0.0, 0.0, 0.0, dustOptions)
             }
-            location.world.spawnParticle(Particle.REDSTONE, location, 1, 0.0, 0.0, 0.0, 0.0, dustOptions)
+        }
+    }
+
+    private fun synchronizeChestsData(game: Game?) {
+        plugin.debugChestData.clear()
+        val chests = game?.chests ?: return
+
+        chests.forEach { chest ->
+            plugin.debugChestData.add(chest.chestData)
         }
     }
 }

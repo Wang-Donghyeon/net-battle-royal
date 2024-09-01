@@ -26,8 +26,9 @@ class CreateEpicChest(
     private val region: Region
 ): Runnable {
     override fun run() {
-        game.players.filter { DataManager.getMarmotte(it).region == region }.forEach {
-            it.showTitle(
+        game.marmottes.filter { it.region == region }.forEach {
+            val player = it.player
+            player.showTitle(
                 Title.title(
                     text(""),
                     text("낙하").color(NamedTextColor.GOLD),
